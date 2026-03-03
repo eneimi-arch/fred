@@ -4,10 +4,10 @@
   "description": "",
   "scripts": {
     "dev": "webpack-dev-server --config --devtool eval --progress --colors --inline --content-base ./public",
-    "build-profiles": "./node_modules/.bin/coffee ./scripts/simplify-profiles.coffee",
-    "build": "WEBPACK_ENV=build ./node_modules/.bin/webpack",
-    "test": "./node_modules/.bin/mocha",
-    "test-watch": "./node_modules/.bin/mocha -w",
+    "build-profiles": "coffee scripts/simplify-profiles.coffee",
+    "build": "set WEBPACK_ENV=build && webpack",
+    "test": "mocha",
+    "test-watch": "mocha -w",
     "deploy-gh": "git subtree push --prefix public origin gh-pages",
     "reset-gh-pages": "git push origin `git subtree split --prefix output gh-pages`:gh-pages --force"
   },
@@ -25,6 +25,7 @@
     "webpack-file-changer": "^2.0.1"
   },
   "dependencies": {
+    "fhir": "^4.12.0",
     "freezer-js": "^0.8.0",
     "moment": "^2.10.6",
     "node-uuid": "^1.4.7",

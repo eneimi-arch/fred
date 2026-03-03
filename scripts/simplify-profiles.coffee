@@ -7,6 +7,28 @@ path = require "path"
 inputPath = "../fhir_profiles"
 outputPath = "../public/profiles"
 
+# Define helper function at module level
+normalizeTypes = (types) ->
+    return types unless types
+    return types unless Array.isArray(types)
+    
+    # Normalize R4 type structures
+    normalizedTypes = []
+    for type in types
+        normalizedType = {code: type.code}
+        
+        # Copy important properties but exclude complex extensions for simplicity
+        if type.profile
+            normalizedType.profile = type.profile
+        if type.targetProfile
+            normalizedType.targetProfile = type.targetProfile
+        if type.aggregation
+            normalizedType.aggregation = type.aggregation
+            
+        normalizedTypes.push normalizedType
+    
+    return normalizedTypes
+
 summarizeDirectory = (inputDirName, inputDirPath, outputDirPath) ->
 	console.log "Processing #{inputDirName}"
 	profiles = {}
@@ -47,10 +69,29 @@ summarizeValuesets = (fhirBundle, valuesets) ->
 				
 		_addValue(entry?.resource?.concept)
 		
+	# Add R4 support for valuesets
+	r4 = (entry) ->
+		url = entry?.resource?.url || entry?.resource?.valueSet
+		content = entry?.resource?.compose?.include?[0]?.system
+		typeValue = if content then "complete" else "fragment"
+		valuesets[url] = {type: typeValue, items: []}
+		
+		_addValue = (concept) ->
+			for c in concept || []
+				if c.concept
+					_addValue(c.concept)
+				else if c.code
+					valuesets[url].items.push [c.display || c.code, c.code]
+				
+		_addValue(entry?.resource?.compose?.concept)
+	
 	for entry in fhirBundle?.entry || []
-		if entry?.resource?.valueSet and entry?.resource?.concept?.length > 0
+		# Try to detect version and use appropriate handler
+		if entry?.resource?.compose # R4 style
+			r4(entry)
+		else if entry?.resource?.valueSet and entry?.resource?.concept?.length > 0 # STU3 style
 			stu3(entry)
-		else if entry?.resource?.url and entry?.resource?.codeSystem?.concept?.length > 0
+		else if entry?.resource?.url and entry?.resource?.codeSystem?.concept?.length > 0 # DSTU2 style
 			dstu2(entry)
 
 	return valuesets
@@ -66,47 +107,44 @@ summarizeProfiles = (fhirBundle, profiles) ->
 
 		profiles[root] = {}
 		for e, i in entry?.resource?.snapshot?.element || []
-			profiles[root][e.path] =
+			profileEntry = 
 				index: i
 				path: e.path
 				min: e.min
 				max: e.max
-				type: e.type ||  [{"code": "DomainResource"}]
+				# Use the module-level helper function
+				type: normalizeTypes(e.type) || [{"code": "DomainResource"}]
 				isSummary: e.isSummary
 				isModifier: e.isModifier
 				short: e.short
 				name: e.name
 
-			if url = e?.binding?.valueSetReference?.reference
-				profiles[root][e.path].binding =
+			# Handle bindings
+			url = e?.binding?.valueSetReference?.reference || e?.binding?.valueSetUri || e?.binding?.valueSet
+			if url
+				profileEntry.binding =
 					strength: e.binding.strength
 					reference: url
 
-			#assumes id appears before reference - is this accurate?
+			profiles[root][e.path] = profileEntry
+
+			# Handle references
 			if e.id then ids[e.id] = e.path
 			if e.name then names[e.name] = e.path
 
-			#STU3
+			# Handle content references
 			if e.contentReference
 				id = e.contentReference.split("#")[1]
 				profiles[root][e.path].refSchema = ids[id]
-			#DSTU2
 			else if e.nameReference
 				profiles[root][e.path].refSchema = names[e.nameReference]
 
 	return profiles
 
+# Remove debugging before the loop (keep the original structure)
 for inputDirName in fs.readdirSync path.join(__dirname, inputPath)
 	inputDirPath = path.join(__dirname, inputPath, inputDirName)
 	outputDirPath = path.join(__dirname, outputPath)
 	if fs.lstatSync(inputDirPath).isDirectory()
 		summarizeDirectory(inputDirName, inputDirPath, outputDirPath)
-
-
-
-
-
-
-
-
 

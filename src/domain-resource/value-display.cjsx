@@ -94,28 +94,45 @@ class ValueDisplay extends React.Component
 	formatDecimal: (value) ->
 		return value
 
-	formatInt: (value) ->
-		value.toString()
-
-
 	formatBlank: ->
 		<span className="empty-value">...</span>
 
 	render: ->
 		formatters = 
-			date: @formatDate, time: @formatTime, instant: @formatInstant, dateTime: @formatDateTime
-			integer: @formatInt, unsignedInt: @formatInt, positiveInt: @formatInt, decimal: @formatDecimal
-			boolean: @formatBoolean, string: @formatString, uri: @formatString, oid: @formatString, code: @formatString
-			id: @formatString, markdown: @formatString, xhtml: @formatXhtml, code: @formatCode
+			date: @formatDate
+			time: @formatTime
+			instant: @formatInstant
+			dateTime: @formatDateTime
+			integer: @formatInt
+			unsignedInt: @formatInt
+			positiveInt: @formatInt
+			decimal: @formatDecimal
+			boolean: @formatBoolean
+			string: @formatString
+			uri: @formatString
+			oid: @formatString
+			code: @formatString
+			id: @formatString
+			markdown: @formatString
+			xhtml: @formatXhtml
 
-		formatter = formatters[@props.node.fhirType || "string"]
+		formatter = formatters[@props.node.fhirType] || formatters["string"]
+		
+		# Debug logging (remove this in production)
+		# console.log "FhirType:", @props.node.fhirType, "Formatter:", formatter if not formatter and @props.node.fhirType
+
 		value = @props.node.value
+		
 		if @props.node.fhirType is null
 			value = value.toString()
+			
 		displayValue = if @props.node.fhirType is "base64Binary"
 			@formatBlob(value, @props.parent.contentType)
-		else if value not in [null, undefined, ""]
+		else if value not in [null, undefined, ""] and formatter
 			formatter.call(@, value)
+		else if value not in [null, undefined, ""]
+			# Fallback for unknown types - just convert to string
+			value.toString()
 		else
 			@formatBlank()
 

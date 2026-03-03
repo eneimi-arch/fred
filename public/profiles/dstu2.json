@@ -63,7 +63,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ValueSet.text": {
         "index": 5,
@@ -639,7 +643,11 @@
             "code": "code"
           }
         ],
-        "short": "Human language of the designation"
+        "short": "Human language of the designation",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ValueSet.codeSystem.concept.designation.use": {
         "index": 50,
@@ -1381,7 +1389,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Parameters.parameter": {
         "index": 5,
@@ -1642,7 +1654,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       }
     },
     "DomainResource": {
@@ -1708,7 +1724,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DomainResource.text": {
         "index": 5,
@@ -1823,7 +1843,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Account.text": {
         "index": 5,
@@ -1955,7 +1979,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Base currency in which balance is tracked"
+        "short": "Base currency in which balance is tracked",
+        "binding": {
+          "strength": "example",
+          "reference": "http://www.iso.org/iso/home/standards/currency_codes"
+        }
       },
       "Account.balance": {
         "index": 15,
@@ -2125,7 +2153,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "AllergyIntolerance.text": {
         "index": 5,
@@ -2627,7 +2659,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Appointment.text": {
         "index": 5,
@@ -3041,7 +3077,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "AppointmentResponse.text": {
         "index": 5,
@@ -3302,7 +3342,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "AuditEvent.text": {
         "index": 5,
@@ -4211,7 +4255,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Basic.text": {
         "index": 5,
@@ -4415,7 +4463,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Binary.contentType": {
         "index": 5,
@@ -4428,7 +4480,11 @@
           }
         ],
         "isSummary": true,
-        "short": "MimeType of the binary content"
+        "short": "MimeType of the binary content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "Binary.content": {
         "index": 6,
@@ -4507,7 +4563,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "BodySite.text": {
         "index": 5,
@@ -4710,7 +4770,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Bundle.type": {
         "index": 5,
@@ -5300,7 +5364,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "CarePlan.text": {
         "index": 5,
@@ -6283,7 +6351,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Claim.text": {
         "index": 5,
@@ -7998,7 +8070,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ClaimResponse.text": {
         "index": 5,
@@ -9682,7 +9758,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ClinicalImpression.text": {
         "index": 5,
@@ -10381,7 +10461,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Communication.text": {
         "index": 5,
@@ -10803,7 +10887,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "CommunicationRequest.text": {
         "index": 5,
@@ -11250,7 +11338,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Composition.text": {
         "index": 5,
@@ -11928,7 +12020,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ConceptMap.text": {
         "index": 5,
@@ -12607,7 +12703,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Condition.text": {
         "index": 5,
@@ -13156,7 +13256,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Conformance.text": {
         "index": 5,
@@ -13639,7 +13743,11 @@
           }
         ],
         "isSummary": true,
-        "short": "formats supported (xml | json | mime type)"
+        "short": "formats supported (xml | json | mime type)",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "Conformance.profile": {
         "index": 42,
@@ -13883,7 +13991,11 @@
             "code": "code"
           }
         ],
-        "short": "Mime type for certificate"
+        "short": "Mime type for certificate",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "Conformance.rest.security.certificate.blob": {
         "index": 61,
@@ -14961,7 +15073,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Contract.text": {
         "index": 5,
@@ -16361,7 +16477,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Coverage.text": {
         "index": 5,
@@ -16669,7 +16789,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DataElement.text": {
         "index": 5,
@@ -17125,7 +17249,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DetectedIssue.text": {
         "index": 5,
@@ -17470,7 +17598,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Device.text": {
         "index": 5,
@@ -17543,7 +17675,11 @@
             "code": "CodeableConcept"
           }
         ],
-        "short": "What kind of device this is"
+        "short": "What kind of device this is",
+        "binding": {
+          "strength": "preferred",
+          "reference": "https://www.gmdnagency.org/Info.aspx?pageid=1091"
+        }
       },
       "Device.note": {
         "index": 11,
@@ -17793,7 +17929,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DeviceComponent.text": {
         "index": 5,
@@ -17855,7 +17995,11 @@
           }
         ],
         "isSummary": true,
-        "short": "What kind of component it is"
+        "short": "What kind of component it is",
+        "binding": {
+          "strength": "preferred",
+          "reference": "https://rtmms.nist.gov/rtmms/index.htm#!hrosetta"
+        }
       },
       "DeviceComponent.identifier": {
         "index": 10,
@@ -18058,7 +18202,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Language code for the human-readable text strings produced by the device"
+        "short": "Language code for the human-readable text strings produced by the device",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       }
     },
     "DeviceMetric": {
@@ -18125,7 +18273,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DeviceMetric.text": {
         "index": 5,
@@ -18187,7 +18339,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Type of metric"
+        "short": "Type of metric",
+        "binding": {
+          "strength": "preferred",
+          "reference": "https://rtmms.nist.gov/rtmms/index.htm#!hrosetta"
+        }
       },
       "DeviceMetric.identifier": {
         "index": 10,
@@ -18213,7 +18369,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Unit of metric"
+        "short": "Unit of metric",
+        "binding": {
+          "strength": "preferred",
+          "reference": "https://rtmms.nist.gov/rtmms/index.htm#!units"
+        }
       },
       "DeviceMetric.source": {
         "index": 12,
@@ -18473,7 +18633,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DeviceUseRequest.text": {
         "index": 5,
@@ -18787,7 +18951,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DeviceUseStatement.text": {
         "index": 5,
@@ -19029,7 +19197,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DiagnosticOrder.text": {
         "index": 5,
@@ -19574,7 +19746,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DiagnosticReport.text": {
         "index": 5,
@@ -20052,7 +20228,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DocumentManifest.text": {
         "index": 5,
@@ -20524,7 +20704,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "DocumentReference.text": {
         "index": 5,
@@ -21292,7 +21476,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "EligibilityRequest.text": {
         "index": 5,
@@ -21516,7 +21704,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "EligibilityResponse.text": {
         "index": 5,
@@ -21785,7 +21977,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Encounter.text": {
         "index": 5,
@@ -22623,7 +22819,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "EnrollmentRequest.text": {
         "index": 5,
@@ -22896,7 +23096,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "EnrollmentResponse.text": {
         "index": 5,
@@ -23165,7 +23369,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "EpisodeOfCare.text": {
         "index": 5,
@@ -23589,7 +23797,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ExplanationOfBenefit.text": {
         "index": 5,
@@ -23858,7 +24070,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "FamilyMemberHistory.text": {
         "index": 5,
@@ -24274,7 +24490,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Flag.text": {
         "index": 5,
@@ -24557,7 +24777,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Goal.text": {
         "index": 5,
@@ -24997,7 +25221,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Group.text": {
         "index": 5,
@@ -25413,7 +25641,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "HealthcareService.text": {
         "index": 5,
@@ -26035,7 +26267,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ImagingObjectSelection.text": {
         "index": 5,
@@ -26596,7 +26832,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ImagingStudy.text": {
         "index": 5,
@@ -27253,7 +27493,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Immunization.text": {
         "index": 5,
@@ -27954,7 +28198,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ImmunizationRecommendation.text": {
         "index": 5,
@@ -28421,7 +28669,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ImplementationGuide.text": {
         "index": 5,
@@ -29219,7 +29471,11 @@
             "code": "code"
           }
         ],
-        "short": "Format of the page (e.g. html, markdown, etc.)"
+        "short": "Format of the page (e.g. html, markdown, etc.)",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "ImplementationGuide.page.page": {
         "index": 65,
@@ -29298,7 +29554,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "List.text": {
         "index": 5,
@@ -29730,7 +29990,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Location.text": {
         "index": 5,
@@ -30094,7 +30358,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Media.text": {
         "index": 5,
@@ -30406,7 +30674,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Medication.text": {
         "index": 5,
@@ -30929,7 +31201,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "MedicationAdministration.text": {
         "index": 5,
@@ -31412,7 +31688,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "MedicationDispense.text": {
         "index": 5,
@@ -32058,7 +32338,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "MedicationOrder.text": {
         "index": 5,
@@ -32780,7 +33064,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "MedicationStatement.text": {
         "index": 5,
@@ -33293,7 +33581,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "MessageHeader.text": {
         "index": 5,
@@ -33853,7 +34145,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "NamingSystem.text": {
         "index": 5,
@@ -34300,7 +34596,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "NutritionOrder.text": {
         "index": 5,
@@ -35197,7 +35497,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Observation.text": {
         "index": 5,
@@ -35982,7 +36286,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "OperationDefinition.text": {
         "index": 5,
@@ -36636,7 +36944,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "OperationOutcome.text": {
         "index": 5,
@@ -36880,7 +37192,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Order.text": {
         "index": 5,
@@ -37217,7 +37533,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "OrderResponse.text": {
         "index": 5,
@@ -37449,7 +37769,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Organization.text": {
         "index": 5,
@@ -37762,7 +38086,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Patient.text": {
         "index": 5,
@@ -38274,7 +38602,11 @@
             "code": "CodeableConcept"
           }
         ],
-        "short": "The language which can be used to communicate with the patient about his or her health"
+        "short": "The language which can be used to communicate with the patient about his or her health",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Patient.communication.preferred": {
         "index": 43,
@@ -38473,7 +38805,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "PaymentNotice.text": {
         "index": 5,
@@ -38746,7 +39082,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "PaymentReconciliation.text": {
         "index": 5,
@@ -39301,7 +39641,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Person.text": {
         "index": 5,
@@ -39636,7 +39980,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Practitioner.text": {
         "index": 5,
@@ -40049,7 +40397,11 @@
             "code": "CodeableConcept"
           }
         ],
-        "short": "A language the practitioner is able to use in patient communication"
+        "short": "A language the practitioner is able to use in patient communication",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       }
     },
     "Procedure": {
@@ -40115,7 +40467,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Procedure.text": {
         "index": 5,
@@ -40752,7 +41108,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ProcedureRequest.text": {
         "index": 5,
@@ -41140,7 +41500,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ProcessRequest.text": {
         "index": 5,
@@ -41541,7 +41905,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ProcessResponse.text": {
         "index": 5,
@@ -41925,7 +42293,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Provenance.text": {
         "index": 5,
@@ -42483,7 +42855,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Questionnaire.text": {
         "index": 5,
@@ -43013,7 +43389,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "QuestionnaireResponse.text": {
         "index": 5,
@@ -43582,7 +43962,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "ReferralRequest.text": {
         "index": 5,
@@ -43966,7 +44350,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "RelatedPerson.text": {
         "index": 5,
@@ -44220,7 +44608,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "RiskAssessment.text": {
         "index": 5,
@@ -44599,7 +44991,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Schedule.text": {
         "index": 5,
@@ -44814,7 +45210,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "SearchParameter.text": {
         "index": 5,
@@ -45204,7 +45604,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Slot.text": {
         "index": 5,
@@ -45431,7 +45835,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Specimen.text": {
         "index": 5,
@@ -46043,7 +46451,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "StructureDefinition.text": {
         "index": 5,
@@ -46750,7 +47162,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Subscription.text": {
         "index": 5,
@@ -47071,7 +47487,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Substance.text": {
         "index": 5,
@@ -47418,7 +47838,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "SupplyDelivery.text": {
         "index": 5,
@@ -47716,7 +48140,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "SupplyRequest.text": {
         "index": 5,
@@ -48083,7 +48511,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "TestScript.text": {
         "index": 5,
@@ -49861,7 +50293,11 @@
             "code": "code"
           }
         ],
-        "short": "Language of the resource content"
+        "short": "Language of the resource content",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "VisionPrescription.text": {
         "index": 5,
@@ -50665,7 +51101,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Mime type of the content, with charset etc."
+        "short": "Mime type of the content, with charset etc.",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "Attachment.language": {
         "index": 4,
@@ -50678,7 +51118,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Human language of the content (BCP-47)"
+        "short": "Human language of the content (BCP-47)",
+        "binding": {
+          "strength": "required",
+          "reference": "http://tools.ietf.org/html/bcp47"
+        }
       },
       "Attachment.data": {
         "index": 5,
@@ -51434,7 +51878,11 @@
           }
         ],
         "isSummary": true,
-        "short": "The technical format of the signature"
+        "short": "The technical format of the signature",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "Signature.blob": {
         "index": 7,
@@ -53215,7 +53663,11 @@
           }
         ],
         "isSummary": true,
-        "short": "Computable language of mapping"
+        "short": "Computable language of mapping",
+        "binding": {
+          "strength": "required",
+          "reference": "http://www.rfc-editor.org/bcp/bcp13.txt"
+        }
       },
       "ElementDefinition.mapping.map": {
         "index": 66,
@@ -54037,6 +54489,10 @@
     }
   },
   "valuesets": {
+    "http://hl7.org/fhir/ValueSet/example-extensional": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/example-inline": {
       "type": "complete",
       "items": [
@@ -54053,6 +54509,14 @@
           "chol"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/example-intensional": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/example-expansion": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/dicom-dcim": {
       "type": "complete",
@@ -66724,6 +67188,18 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/ucum-common": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/cpt-all": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/yesnodontknow": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/nhin-purposeofuse": {
       "type": "complete",
       "items": [
@@ -66874,6 +67350,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/diagnostic-service-sections": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/detectedissue-mitigation-action": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/metric-calibration-type": {
       "type": "complete",
       "items": [
@@ -66894,6 +67378,14 @@
           "two-point"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/icd-10": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/specimen-collection-method": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/supplydelivery-status": {
       "type": "complete",
@@ -66929,6 +67421,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/audit-event-sub-type": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/contact-point-system": {
       "type": "complete",
       "items": [
@@ -66954,6 +67450,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/flag-code": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/allergyintolerance-substance-code": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/allergy-intolerance-type": {
       "type": "complete",
       "items": [
@@ -66966,6 +67470,10 @@
           "intolerance"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/event-timing": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/history-status": {
       "type": "complete",
@@ -67008,6 +67516,10 @@
           "unspecified"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/procedure-reason": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/conformance-expectation": {
       "type": "complete",
@@ -67085,6 +67597,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/doc-section-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/procedure-code": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/contactentity-type": {
       "type": "complete",
       "items": [
@@ -67134,6 +67654,10 @@
           "extension"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/dicm-402-roleid": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/measurement-principle": {
       "type": "complete",
@@ -67274,6 +67798,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/dataelement-sdcobjectclassproperty": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/observation-valueabsentreason": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/device-use-request-status": {
       "type": "complete",
       "items": [
@@ -67384,6 +67916,10 @@
           "other"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/questionnaire-questions": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/testscript-operation-codes": {
       "type": "complete",
@@ -67620,6 +68156,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/observation-methods": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/participantstatus": {
       "type": "complete",
       "items": [
@@ -67722,6 +68262,10 @@
           "5"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/specimen-collection-priority": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/goal-status-reason": {
       "type": "complete",
@@ -67870,6 +68414,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/manifestation-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/note-type": {
       "type": "complete",
       "items": [
@@ -67899,6 +68447,10 @@
           "kind"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/c80-doc-typecodes": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/resource-validation-mode": {
       "type": "complete",
@@ -68099,28 +68651,7 @@
     },
     "http://hl7.org/fhir/ValueSet/identifier-type": {
       "type": "complete",
-      "items": [
-        [
-          "Universal Device Identifier",
-          "UDI"
-        ],
-        [
-          "Serial Number",
-          "SNO"
-        ],
-        [
-          "Social Beneficiary Identifier",
-          "SB"
-        ],
-        [
-          "Placer Identifier",
-          "PLAC"
-        ],
-        [
-          "Filler Identifier",
-          "FILL"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/http-verb": {
       "type": "complete",
@@ -68181,6 +68712,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/condition-stage": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/formatcodes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/resource-aggregation-mode": {
       "type": "complete",
       "items": [
@@ -68210,6 +68749,14 @@
           "resolved"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/ldlcholesterol-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/dicm-405-mediatype": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/resource-types": {
       "type": "complete",
@@ -68638,6 +69185,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/doc-classcodes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/bodysite-laterality": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/nutrition-order-status": {
       "type": "complete",
       "items": [
@@ -68674,6 +69229,10 @@
           "cancelled"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/name-part-qualifier": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/binding-strength": {
       "type": "complete",
@@ -68797,6 +69356,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/c80-practice-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/encounter-priority": {
       "type": "complete",
       "items": [
@@ -68877,6 +69440,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/defined-types": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/contract-subtype": {
       "type": "complete",
       "items": [
@@ -68902,6 +69469,10 @@
           "query"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/consistency-type": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/assert-response-code-types": {
       "type": "complete",
@@ -69293,16 +69864,7 @@
     },
     "http://hl7.org/fhir/ValueSet/referencerange-meaning": {
       "type": "complete",
-      "items": [
-        [
-          "Type",
-          "type"
-        ],
-        [
-          "Endocrine",
-          "endocrine"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/flag-priority": {
       "type": "complete",
@@ -69374,6 +69936,10 @@
           "nil-known"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/modified-foodtype": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/observation-relationshiptypes": {
       "type": "complete",
@@ -69558,6 +70124,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/diet-type": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/animal-species": {
       "type": "complete",
       "items": [
@@ -69613,6 +70183,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/c80-facilitycodes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/adjustment-reason": {
       "type": "complete",
       "items": [
@@ -69666,24 +70240,7 @@
     },
     "http://hl7.org/fhir/ValueSet/timing-abbreviation": {
       "type": "complete",
-      "items": [
-        [
-          "QD",
-          "QD"
-        ],
-        [
-          "QOD",
-          "QOD"
-        ],
-        [
-          "Q4H",
-          "Q4H"
-        ],
-        [
-          "Q6H",
-          "Q6H"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/device-use-request-priority": {
       "type": "complete",
@@ -69705,6 +70262,10 @@
           "asap"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/substance-code": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/name-use": {
       "type": "complete",
@@ -69919,6 +70480,26 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/encounter-reason": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/detectedissue-category": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/clinical-findings": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/vaccination-protocol-dose-target": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/relatedperson-relationshiptype": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/conformance-statement-kind": {
       "type": "complete",
       "items": [
@@ -69996,6 +70577,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/medication-form-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/payment-status": {
       "type": "complete",
       "items": [
@@ -70008,6 +70593,10 @@
           "cleared"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/procedure-not-performed-reason": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/adjudication-error": {
       "type": "complete",
@@ -70039,6 +70628,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/diagnostic-order-event": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/medication-package-form-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/vision-product": {
       "type": "complete",
       "items": [
@@ -70051,6 +70648,14 @@
           "contact"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/route-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/care-plan-category": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/procedure-progress-status-codes": {
       "type": "complete",
@@ -70135,6 +70740,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/approach-site-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/reaction-event-severity": {
       "type": "complete",
       "items": [
@@ -70164,6 +70773,10 @@
           "Vision"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/procedure-category": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/patient-mpi-match": {
       "type": "complete",
@@ -70227,6 +70840,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/immunization-route": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/restful-security-service": {
       "type": "complete",
       "items": [
@@ -70255,6 +70872,10 @@
           "Certificates"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/media-view": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/service-pharmacy": {
       "type": "complete",
@@ -70326,6 +70947,10 @@
           "material"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/condition-severity": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/service-uscls": {
       "type": "complete",
@@ -70432,6 +71057,14 @@
           "other"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/encounter-special-courtesy": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/condition-code": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/encounter-location-status": {
       "type": "complete",
@@ -70634,6 +71267,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/supplyrequest-when": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/missing-tooth-reason": {
       "type": "complete",
       "items": [
@@ -70655,6 +71292,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/questionnaire-category": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/vaccine-code": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/service-product": {
       "type": "complete",
       "items": [
@@ -70667,6 +71312,10 @@
           "flushot"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/dicom-cid29": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/vision-base-codes": {
       "type": "complete",
@@ -70772,6 +71421,18 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/enteral-route": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/fips-county": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/kos-title": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/guide-resource-purpose": {
       "type": "complete",
       "items": [
@@ -70868,6 +71529,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/goal-start-event": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/diagnostic-order-status": {
       "type": "complete",
       "items": [
@@ -70925,6 +71590,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/care-plan-activity": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/search-param-type": {
       "type": "complete",
       "items": [
@@ -70975,6 +71644,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/c80-doc-classcodes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/doc-typecodes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/claim-exception": {
       "type": "complete",
       "items": [
@@ -71009,6 +71686,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/system-restful-interaction": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/encounter-state": {
       "type": "complete",
       "items": [
@@ -71038,6 +71719,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/supplement-type": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/practitioner-specialty": {
       "type": "complete",
       "items": [
@@ -71063,6 +71748,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/condition-outcome": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/animal-breeds": {
       "type": "complete",
       "items": [
@@ -71086,12 +71775,19 @@
     },
     "http://hl7.org/fhir/ValueSet/audit-event-type": {
       "type": "complete",
-      "items": [
-        [
-          "RESTful Operation",
-          "rest"
-        ]
-      ]
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/age-units": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/security-labels": {
+      "type": "fragment",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/focal-subject": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/constraint-severity": {
       "type": "complete",
@@ -71386,6 +72082,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/performer-role": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/contact-point-use": {
       "type": "complete",
       "items": [
@@ -71443,6 +72143,14 @@
           "entered-in-error"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/condition-predecessor": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/investigation-sets": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/observation-category": {
       "type": "complete",
@@ -71522,6 +72230,10 @@
           "stopped"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/specimen-container-type": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/classification-or-context": {
       "type": "complete",
@@ -71777,6 +72489,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/manifestation-or-symptom": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/provenance-entity-role": {
       "type": "complete",
       "items": [
@@ -71913,6 +72629,10 @@
           "failed"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/texture-code": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/address-type": {
       "type": "complete",
@@ -72153,6 +72873,18 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/entformula-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/designation-use": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/usps-state": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/oral-prosthodontic-material": {
       "type": "complete",
       "items": [
@@ -72289,6 +73021,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/probability-distribution-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/operation-parameter-type": {
+      "type": "fragment",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/animal-genderstatus": {
       "type": "complete",
       "items": [
@@ -72305,6 +73045,10 @@
           "unknown"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/diagnostic-requests": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/encounter-special-arrangements": {
       "type": "complete",
@@ -72376,6 +73120,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/dataelement-sdcobjectclass": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/conditional-delete-status": {
       "type": "complete",
       "items": [
@@ -72392,6 +73140,10 @@
           "multiple"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/immunization-site": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/audit-event-outcome": {
       "type": "complete",
@@ -72521,6 +73273,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/use-context": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/list-status": {
       "type": "complete",
       "items": [
@@ -72567,14 +73323,13 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/observation-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/marital-status": {
       "type": "complete",
-      "items": [
-        [
-          "Unmarried",
-          "U"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/assert-operator-codes": {
       "type": "complete",
@@ -72621,18 +73376,13 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/report-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/encounter-participant-type": {
       "type": "complete",
-      "items": [
-        [
-          "Translator",
-          "translator"
-        ],
-        [
-          "Emergency",
-          "emergency"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/identity-assuranceLevel": {
       "type": "complete",
@@ -72693,6 +73443,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/type-restful-interaction": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/care-plan-status": {
       "type": "complete",
       "items": [
@@ -72717,6 +73471,18 @@
           "cancelled"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/bodysite-relative-location": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/immunization-reason": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/profile-code": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/care-plan-activity-status": {
       "type": "complete",
@@ -72784,6 +73550,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/no-immunization-reason": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/medication-codes": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/document-mode": {
       "type": "complete",
       "items": [
@@ -72796,6 +73570,10 @@
           "consumer"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/instance-availability": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/message-significance-category": {
       "type": "complete",
@@ -72813,6 +73591,14 @@
           "Notification"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/nutrient-code": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/condition-cause": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/devicestatus": {
       "type": "complete",
@@ -72846,40 +73632,7 @@
     },
     "http://hl7.org/fhir/ValueSet/digital-media-subtype": {
       "type": "complete",
-      "items": [
-        [
-          "Diagram",
-          "diagram"
-        ],
-        [
-          "Fax",
-          "fax"
-        ],
-        [
-          "Scanned Document",
-          "scan"
-        ],
-        [
-          "Retina scan",
-          "retina"
-        ],
-        [
-          "Fingerprint",
-          "fingerprint"
-        ],
-        [
-          "Iris",
-          "iris"
-        ],
-        [
-          "Palm",
-          "palm"
-        ],
-        [
-          "Face",
-          "face"
-        ]
-      ]
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/dataelement-stringency": {
       "type": "complete",
@@ -72934,6 +73687,22 @@
           "9"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/specimen-treatment-procedure": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/units-of-time": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/parent-relationship-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/activity-reason": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/forms": {
       "type": "complete",
@@ -73289,6 +74058,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/body-site": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/answer-format": {
       "type": "complete",
       "items": [
@@ -73382,6 +74155,14 @@
           "draft"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/food-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/postal-address-use": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/goal-priority": {
       "type": "complete",
@@ -73648,6 +74429,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/questionnaire-answers": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/order-status": {
       "type": "complete",
       "items": [
@@ -73684,6 +74469,10 @@
           "completed"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/participant-role": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/entformula-additive": {
       "type": "complete",
@@ -73722,6 +74511,18 @@
           "nocount"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/procedure-outcome": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/observation-interpretation": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/template-status-code": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/days-of-week": {
       "type": "complete",
@@ -79128,6 +79929,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/procedure-followup": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/observation-status": {
       "type": "complete",
       "items": [
@@ -79270,6 +80075,58 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/daf-bodysite": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-patient-disability": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-spec-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-encounter-condition-role": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-ucum-vitals-common": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-obs-codedresults": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-condition-certainty": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-goal-reason-rejected": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-allergyintolerance-reason-refuted": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-manifestation-ccda-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-encounter-dischargedisposition": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-encounter-canceled-reason": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-diagnosticorder-reason-rejected": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/uslab-obs-kind": {
       "type": "complete",
       "items": [
@@ -79308,6 +80165,10 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/uslab-patient-uslab-nameuse": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/qicore-adverseevent-type": {
       "type": "complete",
       "items": [
@@ -79324,6 +80185,14 @@
           "unsafe"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-obs-spec-reject": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-priority": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/qicore-diagnosticorder-precondition": {
       "type": "complete",
@@ -79342,6 +80211,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/uslab-cond-reasonforstudy": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-list-DAFMedListCode": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/sdc-group-special-type": {
       "type": "complete",
       "items": [
@@ -79354,6 +80231,38 @@
           "footer"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/daf-problem": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-medication-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-clinical-findings": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-observation-body-position": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-spec-bodysite": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-procedure-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-race": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-communication-reason-not-performed": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/qicore-observation-verification": {
       "type": "complete",
@@ -79450,6 +80359,62 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/daf-encounter-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/sdc-dex-mimetype": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-encounter-reason": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-medication-dose-type": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/substance-sct": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-observation-CCDAVitalSignResult": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-observation-delta": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/substance-rxnorm": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-cvx": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-medication-route": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-referralrequest-reason-rejected": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/dataelement-sdccode": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-patient-uslabph-nameuse": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-units": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/qicore-adverseevent-category": {
       "type": "complete",
       "items": [
@@ -79495,6 +80460,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/uslab-obs-codes": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-observation-ccdasmokingstatus": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/qicore-flag-category": {
       "type": "complete",
       "items": [
@@ -79528,6 +80501,14 @@
         ]
       ]
     },
+    "http://hl7.org/fhir/ValueSet/sdcde-dataelement-sdccode": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/substance-unii": {
+      "type": "complete",
+      "items": []
+    },
     "http://hl7.org/fhir/ValueSet/qicore-patient-military-service": {
       "type": "complete",
       "items": [
@@ -79556,6 +80537,30 @@
           "inactive-reserve"
         ]
       ]
+    },
+    "http://hl7.org/fhir/ValueSet/substance-ndfrt": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/uslab-obs-interpretation": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/qicore-deviceuserequest-reason-rejected": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-ethnicity": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-substance": {
+      "type": "complete",
+      "items": []
+    },
+    "http://hl7.org/fhir/ValueSet/daf-product-form": {
+      "type": "complete",
+      "items": []
     },
     "http://hl7.org/fhir/ValueSet/qicore-appropriateness-score": {
       "type": "complete",
