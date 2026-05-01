@@ -37,11 +37,8 @@ const availableElements = ref<{name: string, path: string, type: string, definit
 const expandedPaths = ref<Record<string, boolean>>({});
 const currentElementPath = ref('');
 
-// ValueSet loading & complex type management
-const valueSetOptions = ref<Record<string, {code: string, display: string}[]>>({});
-const loadingValueSets = ref<Record<string, boolean>>({});
+// Complex type management
 const expandedComplexTypes = ref<Record<string, boolean>>({});
-const valueSetLoaderReady = ref(false);
 
 // ============================================
 // COMPUTED PROPERTIES
@@ -100,129 +97,14 @@ function getInputType(elementType: string): string {
 // ============================================
 
 /**
- * Load ValueSet options from /valueSets/R4/ folder
- * Falls back to hardcoded values if network/local fails
- */
-async function loadValueSetOptionsForElement(elementPath: string): Promise<{code: string, display: string}[]> {
-  const element = availableElements.value.find(e => e.path === elementPath);
-
-  if (!element?.binding?.valueSet) {
-    return [];
-  }
-
-  const bindingUrl = element.binding.valueSet;
-
-  loadingValueSets.value[elementPath] = true;
-
-  try {
-    console.log(`Loading ValueSet for ${elementPath}...`);
-
-    const options = await valueSetLoader.getValueSetOptions(bindingUrl, {
-      maxOptions: 100,
-      timeout: 3000
-    });
-
-    valueSetOptions.value[elementPath] = options;
-
-    console.log(`Loaded ${options.length} options for ${elementPath}`);
-
-    return options;
-
-  } catch (error) {
-    console.error(`Failed to load ValueSet for ${elementPath}:`, error);
-
-    const fallback = getHardcodedFallback(bindingUrl);
-    valueSetOptions.value[elementPath] = fallback;
-
-    return fallback;
-
-  } finally {
-    loadingValueSets.value[elementPath] = false;
-  }
-}
-
-/**
- * Get cached options or load them
+ * Get ValueSet options for a bound element.
+ * Synchronous — data is imported statically via Vite, always available.
  */
 function getValueSetOptions(elementPath: string): {code: string, display: string}[] {
-  if (valueSetOptions.value[elementPath]) {
-    return valueSetOptions.value[elementPath];
-  }
-
-  // Auto-load if not cached (fire and forget - will update reactively)
-  loadValueSetOptionsForElement(elementPath);
-
-  return [];
-}
-
-/**
- * Hardcoded fallbacks for critical valuesets
- */
-function getHardcodedFallback(bindingUrl: string): {code: string, display: string}[] {
-  const fallbacks: Record<string, {code: string, display: string}[]> = {
-    'http://hl7.org/fhir/ValueSet/administrative-gender': [
-      { code: 'male', display: 'Male' },
-      { code: 'female', display: 'Female' },
-      { code: 'other', display: 'Other' },
-      { code: 'unknown', display: 'Unknown' }
-    ],
-    'http://hl7.org/fhir/ValueSet/name-use': [
-      { code: 'usual', display: 'Usual' },
-      { code: 'official', display: 'Official' },
-      { code: 'temp', display: 'Temp' },
-      { code: 'nickname', display: 'Nickname' },
-      { code: 'anonymous', display: 'Anonymous' },
-      { code: 'old', display: 'Old' },
-      { code: 'maiden', display: 'Maiden Name' }
-    ],
-    'http://hl7.org/fhir/ValueSet/address-use': [
-      { code: 'home', display: 'Home' },
-      { code: 'work', display: 'Work' },
-      { code: 'temp', display: 'Temporary' },
-      { code: 'old', display: 'Old/Incorrect' },
-      { code: 'billing', display: 'Billing' }
-    ],
-    'http://hl7.org/fhir/ValueSet/address-type': [
-      { code: 'postal', display: 'Postal' },
-      { code: 'physical', display: 'Physical' },
-      { code: 'both', display: 'Both' }
-    ],
-    'http://hl7.org/fhir/ValueSet/identifier-use': [
-      { code: 'usual', display: 'Usual' },
-      { code: 'official', display: 'Official' },
-      { code: 'temp', display: 'Temp' },
-      { code: 'secondary', display: 'Secondary' },
-      { code: 'old', display: 'Old' }
-    ],
-    'http://hl7.org/fhir/ValueSet/contact-point-system': [
-      { code: 'phone', display: 'Phone' },
-      { code: 'fax', display: 'Fax' },
-      { code: 'email', display: 'Email' },
-      { code: 'pager', display: 'Pager' },
-      { code: 'url', display: 'URL' },
-      { code: 'sms', display: 'SMS' },
-      { code: 'other', display: 'Other' }
-    ],
-    'http://hl7.org/fhir/ValueSet/contact-point-use': [
-      { code: 'home', display: 'Home' },
-      { code: 'work', display: 'Work' },
-      { code: 'temp', display: 'Temp' },
-      { code: 'old', display: 'Old' },
-      { code: 'mobile', display: 'Mobile' }
-    ],
-    'http://hl7.org/fhir/ValueSet/observation-status': [
-      { code: 'registered', display: 'Registered' },
-      { code: 'preliminary', display: 'Preliminary' },
-      { code: 'final', display: 'Final' },
-      { code: 'amended', display: 'Amended' },
-      { code: 'corrected', display: 'Corrected' },
-      { code: 'cancelled', display: 'Cancelled' },
-      { code: 'entered-in-error', display: 'Entered in Error' },
-      { code: 'unknown', display: 'Unknown' }
-    ]
-  };
-
-  return fallbacks[bindingUrl] || [];
+  const element = availableElements.value.find(e => e.path === elementPath);
+  const bindingUrl = (element && element.binding && element.binding.valueSet) || '';
+  if (!bindingUrl) return [];
+  return valueSetLoader.getOptions(bindingUrl);
 }
 
 // ============================================
@@ -352,8 +234,6 @@ function initResource(resourceType: string) {
   selectedElements.value = [];
   availableElements.value = [];
   expandedPaths.value = {};
-  valueSetOptions.value = {};
-  loadingValueSets.value = {};
   expandedComplexTypes.value = {};
 
   updateJson();
@@ -465,10 +345,6 @@ function addElement(elementPath: string, elementType: string) {
   });
 
   setNestedValue(currentResource.value, elementPath, defaultValue);
-
-  if (hasValueSetBinding.value(elementPath)) {
-    loadValueSetOptionsForElement(elementPath);
-  }
 
   updateJson();
   showElementSelector.value = false;
@@ -670,18 +546,10 @@ function downloadJson() {
 // INITIALIZATION
 // ============================================
 
-onMounted(async () => {
+onMounted(() => {
   loadFhirProfiles();
-
-  try {
-    console.log('Initializing ValueSet loader...');
-    await valueSetLoader.initialize();
-    valueSetLoaderReady.value = true;
-    console.log('ValueSet loader ready!');
-  } catch (error: any) {
-    console.warn('ValueSet loader init failed, will use fallbacks:', error?.message);
-    valueSetLoaderReady.value = false;
-  }
+  // ValueSet index is imported statically — already loaded, no async init needed
+  console.log('ValueSet loader ready:', valueSetLoader.getStats());
 });
 </script>
 
@@ -837,14 +705,8 @@ onMounted(async () => {
               <!-- CASE 2: BOUND ELEMENT with ValueSet (gender, etc.) -->
               <div v-else-if="hasValueSetBinding(element.path)" class="field-bound">
 
-                <!-- Loading indicator -->
-                <div v-if="loadingValueSets[element.path]" class="loading-indicator">
-                  Loading {{ element.name }} options...
-                </div>
-
-                <!-- Dropdown with loaded options -->
+                <!-- Dropdown with options (synchronous from static index) -->
                 <select
-                  v-else
                   :value="element.value"
                   @change="updateElementValue(element.path, ($event.target as HTMLSelectElement).value)"
                   class="form-select"
@@ -877,15 +739,6 @@ onMounted(async () => {
                         :class="getElementBinding(element.path)?.strength || ''">
                     {{ getElementBinding(element.path)?.strength || '' }}
                   </small>
-
-                  <button
-                    v-if="!valueSetOptions[element.path] && !loadingValueSets[element.path]"
-                    @click="loadValueSetOptionsForElement(element.path)"
-                    class="btn-reload-options"
-                    title="Reload ValueSet options"
-                  >
-                    &#128260; Reload Options
-                  </button>
                 </div>
               </div>
 
@@ -1274,13 +1127,11 @@ onMounted(async () => {
   margin-top: 6px;
 }
 
-.loading-indicator {
-  padding: 10px;
-  color: #666;
+.loading-hint {
+  font-size: 11px;
+  color: #888;
   font-style: italic;
-  text-align: center;
-  background: #f0f8ff;
-  border-radius: 4px;
+  margin-bottom: 4px;
 }
 
 .binding-meta {
