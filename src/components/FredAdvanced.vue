@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 // FHIR Versions and Profiles
 const fhirVersions: { value: string, label: string, profiles: Record<string, any> }[] = [
@@ -24,9 +24,67 @@ const availableResourceTypes = ref<string[]>([]);
 const resourceProfiles = ref<Record<string, any>>({});
 const showVersionSelector = ref(false);
 const selectedElements = ref<{name: string, path: string, value: any, type: string}[]>([]);
-const availableElements = ref<{name: string, path: string, type: string, definition: string}[]>([]);
+const availableElements = ref<{name: string, path: string, type: string, definition: string, binding: any}[]>([]);
 const expandedPaths = ref<Record<string, boolean>>({});
 const currentElementPath = ref('');
+
+// ✅ STEP 2: NEW - Detect elements with ValueSet bindings
+const hasValueSetBinding = computed(() => {
+  return (elementPath: string) => {
+    const element = availableElements.value.find(e => e.path === elementPath);
+    return !!element?.binding && 
+           ['required', 'extensible', 'preferred'].includes(element.binding.strength);
+  };
+});
+
+// ✅ STEP 3 NEW: Get ValueSet options for bound elements
+function getValueSetOptions(elementPath: string): {code: string, display: string}[] {
+  const element = availableElements.value.find(e => e.path === elementPath);
+  
+  if (!element?.binding?.valueSet) {
+    return [];
+  }
+  
+  // Common FHIR ValueSets - fallback options if network fails
+  const commonValueSets: Record<string, {code: string, display: string}[]> = {
+    'http://hl7.org/fhir/ValueSet/administrative-gender': [
+      { code: 'male', display: 'Male' },
+      { code: 'female', display: 'Female' },
+      { code: 'other', display: 'Other' },
+      { code: 'unknown', display: 'Unknown' }
+    ],
+    'http://hl7.org/fhir/ValueSet/observation-status': [
+      { code: 'registered', display: 'Registered' },
+      { code: 'preliminary', display: 'Preliminary' },
+      { code: 'final', display: 'Final' },
+      { code: 'corrected', display: 'Corrected' },
+      { code: 'cancelled', display: 'Cancelled' },
+      { code: 'entered-in-error', display: 'Entered in Error' },
+      { code: 'unknown', display: 'Unknown' }
+    ],
+    'http://hl7.org/fhir/ValueSet/contact-point-system': [
+      { code: 'phone', display: 'Phone' },
+      { code: 'fax', display: 'Fax' },
+      { code: 'email', display: 'Email' },
+      { code: 'pager', display: 'Pager' },
+      { code: 'url', display: 'URL' },
+      { code: 'sms', display: 'SMS' },
+      { code: 'other', display: 'Other' }
+    ],
+    'http://hl7.org/fhir/ValueSet/name-use': [
+      { code: 'usual', display: 'Usual' },
+      { code: 'official', display: 'Official' },
+      { code: 'temp', display: 'Temp' },
+      { code: 'nickname', display: 'Nickname' },
+      { code: 'anonymous', display: 'Anonymous' },
+      { code: 'old', display: 'Old' },
+      { code: 'maiden', display: 'Maiden' }
+    ]
+  };
+  
+  // Return cached options or empty array
+  return commonValueSets[element.binding.valueSet] || [];
+}
 
 // Close all dropdowns when clicking outside
 document.addEventListener('click', (event) => {
@@ -144,6 +202,7 @@ function initResource(resourceType: string) {
 }
 
 // Load available elements for current resource type (lazy loading)
+// ✅ STEP 1 COMPLETE: Now includes binding field
 function loadAvailableElements(parentPath: string = '') {
   const profile = resourceProfiles.value[currentFhirVersion.value]?.[currentResourceType.value];
   if (!profile?.snapshot?.element) {
@@ -171,7 +230,8 @@ function loadAvailableElements(parentPath: string = '') {
         name: pathParts[pathParts.length - 1],
         path: elementPath,
         type: e.type?.[0]?.code || 'unknown',
-        definition: e.definition || ''
+        definition: e.definition || '',
+        binding: e.binding || null  // ✅ STEP 1 FIX: Preserve binding data
       };
     })
     .sort((a: any, b: any) => {
@@ -462,11 +522,18 @@ onMounted(() => {
             Add Element ▼
           </button>
 
+          <!-- ✅ STEP 2 UPDATE: Show binding indicators in dropdown -->
           <div v-if="showElementSelector" class="element-selector-dropdown">
             <div v-for="element in availableElements" :key="element.path"
                  @click="addElement(element.path, element.type)"
-                 class="resource-option">
-              {{ element.name }} ({{ element.type }})
+                 class="resource-option"
+                 :class="{ 'has-binding': hasValueSetBinding(element.path) }">
+              <span>{{ element.name }}</span>
+              <span class="type-badge">{{ element.type }}</span>
+              <!-- Show indicator if element has ValueSet binding -->
+              <span v-if="hasValueSetBinding(element.path)" class="binding-indicator" title="Has ValueSet options">
+                📋
+              </span>
               <button v-if="hasNestedElements(element.path)" @click.stop="drillDown(element.path)" class="expand-btn">▶</button>
             </div>
           </div>
@@ -509,10 +576,35 @@ onMounted(() => {
             <div v-for="element in selectedElements" :key="element.path" class="profile-field">
               <div class="field-header">
                 <span class="field-name">{{ element.path }}</span>
+                <span v-if="hasValueSetBinding(element.path)" class="binding-badge" title="Has predefined values">
+                  📋 Bound
+                </span>
                 <button @click="removeElement(element.path)" 
                         class="remove-btn" title="Remove element">×</button>
               </div>
-              <input v-model="element.value" @change="updateElementValue(element.path, element.value)" />
+              
+              <!-- ✅ SMART EDITOR: Dropdown for bound elements, input for regular -->
+              <select 
+                v-if="hasValueSetBinding(element.path)"
+                :value="element.value" 
+                @change="updateElementValue(element.path, ($event.target as HTMLSelectElement).value)"
+                class="form-select"
+              >
+                <option value="">-- Select {{ element.name }} --</option>
+                <option 
+                  v-for="option in getValueSetOptions(element.path)" 
+                  :key="option.code" 
+                  :value="option.code"
+                >
+                  {{ option.display }}
+                </option>
+              </select>
+              
+              <input 
+                v-else
+                v-model="element.value" 
+                @change="updateElementValue(element.path, element.value)" 
+              />
             </div>
           </div>
           
@@ -657,7 +749,7 @@ onMounted(() => {
   z-index: 1000;
   max-height: 300px;
   overflow-y: auto;
-  width: 220px;
+  width: 280px;
   top: 100%;
   left: 0;
   animation: fadeIn 0.2s ease-in-out;
@@ -672,6 +764,9 @@ onMounted(() => {
   border-bottom: 1px solid #f0f0f0;
   font-size: 13px;
   color: #212121;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .version-option:last-child,
@@ -692,6 +787,42 @@ onMounted(() => {
   background-color: #1976d2;
   color: #ffffff;
   font-weight: 600;
+}
+
+/* ✅ STEP 2: Highlight elements with bindings */
+.resource-option.has-binding {
+  background-color: #e8f5e9;
+  border-left: 3px solid #4caf50;
+}
+
+.resource-option.has-binding:hover {
+  background-color: #1976d2;
+  border-left-color: #1976d2;
+}
+
+.type-badge {
+  font-size: 11px;
+  padding: 2px 6px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+/* ✅ STEP 2: Binding indicator styles */
+.binding-indicator {
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.binding-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-left: 8px;
 }
 
 @keyframes fadeIn {
@@ -932,6 +1063,23 @@ onMounted(() => {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
+.expand-btn {
+  background: none;
+  border: 1px solid #999;
+  color: #666;
+  padding: 2px 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.expand-btn:hover {
+  background-color: #e3f2fd;
+  border-color: #1976d2;
+  color: #1976d2;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1009,5 +1157,23 @@ h2 {
     flex-direction: column;
     align-items: stretch;
   }
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #4caf50; /* Green border for bound fields */
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #333333;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
 </style>
