@@ -1,4 +1,10 @@
 <script setup lang="ts">
+// ============================================
+// IMPORTS
+// ============================================
+import valueSetLoader from '@/services/valueSetLoader';
+import ComplexTypeField from './ComplexTypeField.vue';
+import { isComplexType, isPrimitiveType } from '@/fhir/complexTypes';
 import { ref, computed, onMounted } from 'vue';
 
 // FHIR Versions and Profiles
@@ -9,7 +15,10 @@ const fhirVersions: { value: string, label: string, profiles: Record<string, any
   { value: 'DSTU2', label: 'FHIR DSTU2', profiles: {} }
 ];
 
-// Main state
+// ============================================
+// MAIN STATE
+// ============================================
+
 const currentFhirVersion = ref('R4');
 const currentResourceType = ref('');
 const currentResource = ref<any>({});
@@ -23,44 +32,167 @@ const validationErrors = ref<string[]>([]);
 const availableResourceTypes = ref<string[]>([]);
 const resourceProfiles = ref<Record<string, any>>({});
 const showVersionSelector = ref(false);
-const selectedElements = ref<{name: string, path: string, value: any, type: string}[]>([]);
-const availableElements = ref<{name: string, path: string, type: string, definition: string, binding: any}[]>([]);
+const selectedElements = ref<{name: string, path: string, value: any, type: string, binding?: any, min?: number, max?: string}[]>([]);
+const availableElements = ref<{name: string, path: string, type: string, definition: string, binding: any, min?: number, max?: string}[]>([]);
 const expandedPaths = ref<Record<string, boolean>>({});
 const currentElementPath = ref('');
 
-// ✅ STEP 2: NEW - Detect elements with ValueSet bindings
+// ValueSet loading & complex type management
+const valueSetOptions = ref<Record<string, {code: string, display: string}[]>>({});
+const loadingValueSets = ref<Record<string, boolean>>({});
+const expandedComplexTypes = ref<Record<string, boolean>>({});
+const valueSetLoaderReady = ref(false);
+
+// ============================================
+// COMPUTED PROPERTIES
+// ============================================
+
+// Detect elements with ValueSet bindings
 const hasValueSetBinding = computed(() => {
   return (elementPath: string) => {
     const element = availableElements.value.find(e => e.path === elementPath);
-    return !!element?.binding && 
+    return !!element?.binding &&
            ['required', 'extensible', 'preferred'].includes(element.binding.strength);
   };
 });
 
-// ✅ STEP 3 NEW: Get ValueSet options for bound elements
-function getValueSetOptions(elementPath: string): {code: string, display: string}[] {
+// Get binding info for an element path (for displaying binding strength in UI)
+function getElementBinding(elementPath: string): any {
   const element = availableElements.value.find(e => e.path === elementPath);
-  
+  return element?.binding || null;
+}
+
+// Determine how to render an element (complex/bound/primitive)
+function getElementType(elementType: string): string {
+  if (isComplexType(elementType)) return 'complex';
+  if (isPrimitiveType(elementType)) return 'primitive';
+  return 'unknown';
+}
+
+// Map FHIR types to HTML input types
+function getInputType(elementType: string): string {
+  const typeMap: Record<string, string> = {
+    'string': 'text',
+    'code': 'text',
+    'uri': 'url',
+    'url': 'url',
+    'canonical': 'url',
+    'boolean': 'checkbox',
+    'integer': 'number',
+    'unsignedInt': 'number',
+    'positiveInt': 'number',
+    'decimal': 'number',
+    'dateTime': 'datetime-local',
+    'date': 'date',
+    'instant': 'datetime-local',
+    'time': 'time',
+    'base64Binary': 'text',
+    'id': 'text',
+    'markdown': 'text',
+    'oid': 'text',
+    'string': 'text'
+  };
+  return typeMap[elementType] || 'text';
+}
+
+// ============================================
+// VALUESET LOADING
+// ============================================
+
+/**
+ * Load ValueSet options from /valueSets/R4/ folder
+ * Falls back to hardcoded values if network/local fails
+ */
+async function loadValueSetOptionsForElement(elementPath: string): Promise<{code: string, display: string}[]> {
+  const element = availableElements.value.find(e => e.path === elementPath);
+
   if (!element?.binding?.valueSet) {
     return [];
   }
-  
-  // Common FHIR ValueSets - fallback options if network fails
-  const commonValueSets: Record<string, {code: string, display: string}[]> = {
+
+  const bindingUrl = element.binding.valueSet;
+
+  loadingValueSets.value[elementPath] = true;
+
+  try {
+    console.log(`Loading ValueSet for ${elementPath}...`);
+
+    const options = await valueSetLoader.getValueSetOptions(bindingUrl, {
+      maxOptions: 100,
+      timeout: 3000
+    });
+
+    valueSetOptions.value[elementPath] = options;
+
+    console.log(`Loaded ${options.length} options for ${elementPath}`);
+
+    return options;
+
+  } catch (error) {
+    console.error(`Failed to load ValueSet for ${elementPath}:`, error);
+
+    const fallback = getHardcodedFallback(bindingUrl);
+    valueSetOptions.value[elementPath] = fallback;
+
+    return fallback;
+
+  } finally {
+    loadingValueSets.value[elementPath] = false;
+  }
+}
+
+/**
+ * Get cached options or load them
+ */
+function getValueSetOptions(elementPath: string): {code: string, display: string}[] {
+  if (valueSetOptions.value[elementPath]) {
+    return valueSetOptions.value[elementPath];
+  }
+
+  // Auto-load if not cached (fire and forget - will update reactively)
+  loadValueSetOptionsForElement(elementPath);
+
+  return [];
+}
+
+/**
+ * Hardcoded fallbacks for critical valuesets
+ */
+function getHardcodedFallback(bindingUrl: string): {code: string, display: string}[] {
+  const fallbacks: Record<string, {code: string, display: string}[]> = {
     'http://hl7.org/fhir/ValueSet/administrative-gender': [
       { code: 'male', display: 'Male' },
       { code: 'female', display: 'Female' },
       { code: 'other', display: 'Other' },
       { code: 'unknown', display: 'Unknown' }
     ],
-    'http://hl7.org/fhir/ValueSet/observation-status': [
-      { code: 'registered', display: 'Registered' },
-      { code: 'preliminary', display: 'Preliminary' },
-      { code: 'final', display: 'Final' },
-      { code: 'corrected', display: 'Corrected' },
-      { code: 'cancelled', display: 'Cancelled' },
-      { code: 'entered-in-error', display: 'Entered in Error' },
-      { code: 'unknown', display: 'Unknown' }
+    'http://hl7.org/fhir/ValueSet/name-use': [
+      { code: 'usual', display: 'Usual' },
+      { code: 'official', display: 'Official' },
+      { code: 'temp', display: 'Temp' },
+      { code: 'nickname', display: 'Nickname' },
+      { code: 'anonymous', display: 'Anonymous' },
+      { code: 'old', display: 'Old' },
+      { code: 'maiden', display: 'Maiden Name' }
+    ],
+    'http://hl7.org/fhir/ValueSet/address-use': [
+      { code: 'home', display: 'Home' },
+      { code: 'work', display: 'Work' },
+      { code: 'temp', display: 'Temporary' },
+      { code: 'old', display: 'Old/Incorrect' },
+      { code: 'billing', display: 'Billing' }
+    ],
+    'http://hl7.org/fhir/ValueSet/address-type': [
+      { code: 'postal', display: 'Postal' },
+      { code: 'physical', display: 'Physical' },
+      { code: 'both', display: 'Both' }
+    ],
+    'http://hl7.org/fhir/ValueSet/identifier-use': [
+      { code: 'usual', display: 'Usual' },
+      { code: 'official', display: 'Official' },
+      { code: 'temp', display: 'Temp' },
+      { code: 'secondary', display: 'Secondary' },
+      { code: 'old', display: 'Old' }
     ],
     'http://hl7.org/fhir/ValueSet/contact-point-system': [
       { code: 'phone', display: 'Phone' },
@@ -71,20 +203,65 @@ function getValueSetOptions(elementPath: string): {code: string, display: string
       { code: 'sms', display: 'SMS' },
       { code: 'other', display: 'Other' }
     ],
-    'http://hl7.org/fhir/ValueSet/name-use': [
-      { code: 'usual', display: 'Usual' },
-      { code: 'official', display: 'Official' },
+    'http://hl7.org/fhir/ValueSet/contact-point-use': [
+      { code: 'home', display: 'Home' },
+      { code: 'work', display: 'Work' },
       { code: 'temp', display: 'Temp' },
-      { code: 'nickname', display: 'Nickname' },
-      { code: 'anonymous', display: 'Anonymous' },
       { code: 'old', display: 'Old' },
-      { code: 'maiden', display: 'Maiden' }
+      { code: 'mobile', display: 'Mobile' }
+    ],
+    'http://hl7.org/fhir/ValueSet/observation-status': [
+      { code: 'registered', display: 'Registered' },
+      { code: 'preliminary', display: 'Preliminary' },
+      { code: 'final', display: 'Final' },
+      { code: 'amended', display: 'Amended' },
+      { code: 'corrected', display: 'Corrected' },
+      { code: 'cancelled', display: 'Cancelled' },
+      { code: 'entered-in-error', display: 'Entered in Error' },
+      { code: 'unknown', display: 'Unknown' }
     ]
   };
-  
-  // Return cached options or empty array
-  return commonValueSets[element.binding.valueSet] || [];
+
+  return fallbacks[bindingUrl] || [];
 }
+
+// ============================================
+// COMPLEX TYPE HANDLING
+// ============================================
+
+function toggleComplexType(path: string) {
+  expandedComplexTypes.value[path] = !expandedComplexTypes.value[path];
+}
+
+function shouldAutoExpandComplexType(path: string): boolean {
+  const value = getValueAtPath(currentResource.value, path);
+  return value !== undefined && value !== null &&
+         (typeof value === 'object' ? Object.keys(value).length > 0 : !!value);
+}
+
+function getValueAtPath(data: any, path: string): any {
+  if (!data || !path) return undefined;
+
+  const parts = path.split('.');
+  let current = data;
+
+  for (const part of parts) {
+    if (current === undefined || current === null) return undefined;
+    current = current[part];
+  }
+
+  return current;
+}
+
+function handleComplexTypeUpdate(updateEvent: {path: string, value: any}) {
+  const { path, value } = updateEvent;
+  setNestedValue(currentResource.value, path, value);
+  updateJson();
+}
+
+// ============================================
+// EXISTING METHODS
+// ============================================
 
 // Close all dropdowns when clicking outside
 document.addEventListener('click', (event) => {
@@ -96,7 +273,6 @@ document.addEventListener('click', (event) => {
   }
 });
 
-// Close other dropdowns when opening one
 function openVersionSelector() {
   showVersionSelector.value = true;
   showResourceSelector.value = false;
@@ -120,30 +296,25 @@ function openElementSelector() {
 // Load FHIR profiles (lazy loading)
 async function loadFhirProfiles() {
   try {
-    // Load R4 profiles - these are Bundles containing StructureDefinitions
     const r4Resources: any = await import('../../fhir_profiles/R4/profiles-resources.json');
     const r4Types: any = await import('../../fhir_profiles/R4/profiles-types.json');
 
-    // Combine all StructureDefinitions from both files
     const allStructureDefinitions: any[] = [];
 
-    // Extract StructureDefinitions from resources bundle
     if (r4Resources.default?.entry) {
       allStructureDefinitions.push(...r4Resources.default.entry
         .map((e: any) => e.resource)
         .filter((r: any) => r.resourceType === 'StructureDefinition'));
     }
 
-    // Extract StructureDefinitions from types bundle
     if (r4Types.default?.entry) {
       allStructureDefinitions.push(...r4Types.default.entry
         .map((e: any) => e.resource)
         .filter((r: any) => r.resourceType === 'StructureDefinition'));
     }
 
-    // Create a map of resource types to their StructureDefinitions
     const resourceMap: Record<string, any> = {};
-    allStructureDefinitions.forEach(sd => {
+    allStructureDefinitions.forEach((sd) => {
       const resourceType = sd.type || sd.url?.split('/').pop()?.split('|')[0];
       if (resourceType) {
         resourceMap[resourceType] = sd;
@@ -153,29 +324,15 @@ async function loadFhirProfiles() {
     fhirVersions[0].profiles = resourceMap;
     resourceProfiles.value.R4 = resourceMap;
 
-    // Extract resource types (filter to canonical types only)
     const canonicalResourceTypes = [
-      // Clinical Resources
       'Patient', 'RelatedPerson', 'Practitioner', 'PractitionerRole', 'Organization',
-      'CareTeam', 'Group', 'Device', 'DeviceDefinition', 'DeviceMetric', 'DeviceRequest',
-      'DeviceUseStatement', 'Substance', 'Specimen', 'SpecimenDefinition', 'Observation',
-      'ObservationDefinition', 'DiagnosticReport', 'ImagingStudy', 'Media',
-      'AdverseEvent', 'ClinicalImpression', 'DetectedIssue', 'RiskAssessment',
-      'AllergyIntolerance', 'Condition', 'FamilyMemberHistory', 'Immunization',
-      'ImmunizationEvaluation', 'ImmunizationRecommendation', 'Procedure',
-      'MedicationRequest', 'Medication', 'MedicationAdministration',
-      'MedicationDispense', 'MedicationKnowledge', 'MedicationStatement',
-      'NutritionOrder', 'SupplyRequest', 'SupplyDelivery', 'Encounter', 'EpisodeOfCare',
-      'Appointment', 'AppointmentResponse', 'Schedule', 'Slot', 'HealthcareService',
-      'Location', 'OrganizationAffiliation', 'PaymentNotice', 'PaymentReconciliation',
-      'CoverageEligibilityRequest', 'CoverageEligibilityResponse', 'Claim', 'ClaimResponse',
-      'Coverage', 'ExplanationOfBenefit', 'Account', 'ChargeItem', 'ChargeItemDefinition',
-      'Invoice', 'EnrollmentRequest', 'EnrollmentResponse', 'InsurancePlan',
-      'Binary', 'Bundle', 'Composition', 'DocumentReference', 'DocumentManifest'
+      'Observation', 'Condition', 'Encounter', 'MedicationRequest', 'Procedure',
+      'Location', 'Device', 'AllergyIntolerance', 'Immunization', 'CarePlan',
+      'DiagnosticReport', 'Specimen', 'ServiceRequest', 'Medication', 'Goal'
     ];
 
     availableResourceTypes.value = Object.keys(resourceMap)
-      .filter(type => canonicalResourceTypes.includes(type))
+      .filter((type) => canonicalResourceTypes.includes(type))
       .sort();
 
   } catch (error) {
@@ -191,18 +348,19 @@ function initResource(resourceType: string) {
     resourceType: resourceType,
     id: 'new-' + resourceType.toLowerCase()
   };
-  
-  // Clear previous elements
+
   selectedElements.value = [];
   availableElements.value = [];
   expandedPaths.value = {};
-  
+  valueSetOptions.value = {};
+  loadingValueSets.value = {};
+  expandedComplexTypes.value = {};
+
   updateJson();
   loadAvailableElements();
 }
 
-// Load available elements for current resource type (lazy loading)
-// ✅ STEP 1 COMPLETE: Now includes binding field
+// Load available elements for current resource type
 function loadAvailableElements(parentPath: string = '') {
   const profile = resourceProfiles.value[currentFhirVersion.value]?.[currentResourceType.value];
   if (!profile?.snapshot?.element) {
@@ -210,32 +368,33 @@ function loadAvailableElements(parentPath: string = '') {
     return;
   }
 
-  // Get elements based on parent path
   const basePath = parentPath ? `${currentResourceType.value}.${parentPath}` : currentResourceType.value;
   const elements = profile.snapshot.element
     .filter((e: any) => {
       const pathParts = e.path.split('.');
-      // For root level, get direct children
+
       if (!parentPath) {
         return pathParts.length === 2 && pathParts[0] === currentResourceType.value;
       }
-      // For nested levels, get children of the parent path
-      return e.path.startsWith(basePath + '.') && 
+
+      return e.path.startsWith(basePath + '.') &&
              pathParts.length === (basePath.split('.').length + 1);
     })
     .map((e: any) => {
       const pathParts = e.path.split('.');
       const elementPath = parentPath ? `${parentPath}.${pathParts[pathParts.length - 1]}` : pathParts[pathParts.length - 1];
+
       return {
         name: pathParts[pathParts.length - 1],
         path: elementPath,
         type: e.type?.[0]?.code || 'unknown',
         definition: e.definition || '',
-        binding: e.binding || null  // ✅ STEP 1 FIX: Preserve binding data
+        binding: e.binding || null,
+        min: e.min || 0,
+        max: e.max || '1'
       };
     })
     .sort((a: any, b: any) => {
-      // Prioritize common fields
       const priority = ['id', 'meta', 'implicitRules', 'language', 'text', 'contained', 'extension', 'modifierExtension'];
       const aPriority = priority.indexOf(a.name);
       const bPriority = priority.indexOf(b.name);
@@ -248,61 +407,100 @@ function loadAvailableElements(parentPath: string = '') {
   availableElements.value = elements;
 }
 
-// Add element to resource (lazy loading implementation)
+// Add element to resource
 function addElement(elementPath: string, elementType: string) {
-  // Set appropriate default value based on type
-  let defaultValue: any;
-  switch (elementType) {
-    case 'string':
-    case 'code':
-    case 'uri':
-    case 'url':
-    case 'canonical':
-      defaultValue = '';
-      break;
-    case 'boolean':
-      defaultValue = false;
-      break;
-    case 'integer':
-    case 'unsignedInt':
-    case 'positiveInt':
-      defaultValue = 0;
-      break;
-    case 'decimal':
-      defaultValue = 0.0;
-      break;
-    case 'dateTime':
-    case 'date':
-    case 'instant':
-      defaultValue = new Date().toISOString();
-      break;
-    case 'time':
-      defaultValue = '12:00:00';
-      break;
-    default:
-      defaultValue = {};
+  // Prevent duplicate elements
+  if (selectedElements.value.some(e => e.path === elementPath)) {
+    showElementSelector.value = false;
+    return;
   }
 
-  // Add to selected elements
+  let defaultValue: any;
+
+  if (isComplexType(elementType)) {
+    defaultValue = createEmptyComplexObject(elementType);
+  } else {
+    switch (elementType) {
+      case 'string':
+      case 'code':
+      case 'uri':
+      case 'url':
+      case 'canonical':
+        defaultValue = '';
+        break;
+      case 'boolean':
+        defaultValue = false;
+        break;
+      case 'integer':
+      case 'unsignedInt':
+      case 'positiveInt':
+        defaultValue = 0;
+        break;
+      case 'decimal':
+        defaultValue = 0.0;
+        break;
+      case 'dateTime':
+      case 'date':
+      case 'instant':
+        defaultValue = new Date().toISOString();
+        break;
+      default:
+        defaultValue = '';
+    }
+  }
+
   const elementName = elementPath.split('.').pop() || elementPath;
+
+  // Look up binding info from availableElements so it's available on selectedElements
+  const availableElem = availableElements.value.find(e => e.path === elementPath);
+
   selectedElements.value.push({
     name: elementName,
     path: elementPath,
     value: defaultValue,
-    type: elementType
+    type: elementType,
+    binding: availableElem?.binding || null,
+    min: availableElem?.min,
+    max: availableElem?.max
   });
 
-  // Add to resource object (handle nested paths)
   setNestedValue(currentResource.value, elementPath, defaultValue);
+
+  if (hasValueSetBinding.value(elementPath)) {
+    loadValueSetOptionsForElement(elementPath);
+  }
 
   updateJson();
   showElementSelector.value = false;
 }
 
+/**
+ * Create empty object template for complex FHIR types
+ */
+function createEmptyComplexObject(typeName: string): any {
+  const templates: Record<string, any> = {
+    'HumanName': { use: 'official', text: '', family: '', given: [], prefix: [], suffix: [] },
+    'Address': { use: 'home', text: '', line: [], city: '', district: '', state: '', postalCode: '', country: '' },
+    'Identifier': { use: 'usual', system: '', value: '' },
+    'CodeableConcept': { coding: [], text: '' },
+    'Coding': { system: '', code: '', display: '' },
+    'ContactPoint': { system: 'phone', value: '', use: 'home' },
+    'Attachment': { contentType: '', data: '' },
+    'Quantity': { value: 0, unit: '', system: '', code: '' },
+    'Period': { start: '', end: '' },
+    'Reference': { reference: '', display: '' },
+    'Range': { low: {}, high: {} },
+    'Ratio': { numerator: {}, denominator: {} },
+    'Timing': { event: [], repeat: {} },
+    'Annotation': { authorString: '', time: '', text: '' }
+  };
+
+  return templates[typeName] || {};
+}
+
 // Remove element from resource
 function removeElement(elementPath: string) {
   selectedElements.value = selectedElements.value.filter(e => e.path !== elementPath);
-  // Remove from resource object (handle nested paths)
   removeNestedValue(currentResource.value, elementPath);
   updateJson();
 }
@@ -317,53 +515,49 @@ function updateElementValue(elementPath: string, value: any) {
   }
 }
 
-// Helper function to set nested value in object
+// Helper functions
 function setNestedValue(obj: any, path: string, value: any) {
   const keys = path.split('.');
   let current = obj;
-  
+
   for (let i = 0; i < keys.length - 1; i++) {
     if (!(keys[i] in current)) {
       current[keys[i]] = {};
     }
     current = current[keys[i]];
   }
-  
+
   current[keys[keys.length - 1]] = value;
 }
 
-// Helper function to remove nested value from object
 function removeNestedValue(obj: any, path: string) {
   const keys = path.split('.');
   let current = obj;
-  
+
   for (let i = 0; i < keys.length - 1; i++) {
     if (!(keys[i] in current)) {
       return;
     }
     current = current[keys[i]];
   }
-  
+
   delete current[keys[keys.length - 1]];
 }
 
-// Toggle expand/collapse for nested elements
 function toggleExpand(path: string) {
   expandedPaths.value[path] = !expandedPaths.value[path];
 }
 
-// Check if path has nested elements
 function hasNestedElements(path: string): boolean {
   const profile = resourceProfiles.value[currentFhirVersion.value]?.[currentResourceType.value];
   if (!profile?.snapshot?.element) return false;
-  
+
   const fullPath = `${currentResourceType.value}.${path}`;
-  return profile.snapshot.element.some((e: any) => 
+  return profile.snapshot.element.some((e: any) =>
     e.path.startsWith(fullPath + '.') && e.path.split('.').length > fullPath.split('.').length
   );
 }
 
-// Drill down into nested elements
 function drillDown(path: string) {
   currentElementPath.value = path;
   loadAvailableElements(path);
@@ -472,9 +666,22 @@ function downloadJson() {
   showExportDialog.value = false;
 }
 
-// Initialize
-onMounted(() => {
+// ============================================
+// INITIALIZATION
+// ============================================
+
+onMounted(async () => {
   loadFhirProfiles();
+
+  try {
+    console.log('Initializing ValueSet loader...');
+    await valueSetLoader.initialize();
+    valueSetLoaderReady.value = true;
+    console.log('ValueSet loader ready!');
+  } catch (error: any) {
+    console.warn('ValueSet loader init failed, will use fallbacks:', error?.message);
+    valueSetLoaderReady.value = false;
+  }
 });
 </script>
 
@@ -486,10 +693,11 @@ onMounted(() => {
     </header>
 
     <div class="main-container">
+      <!-- Toolbar -->
       <div class="toolbar">
         <div class="toolbar-group">
           <button @click="openVersionSelector" class="btn-version">
-            {{ currentFhirVersion }} ▼
+            {{ currentFhirVersion }} &#9662;
           </button>
 
           <div v-if="showVersionSelector" class="version-selector-dropdown">
@@ -504,7 +712,7 @@ onMounted(() => {
 
         <div class="toolbar-group" v-if="currentFhirVersion">
           <button @click="openResourceSelector" class="btn-primary" :disabled="!availableResourceTypes.length">
-            {{ currentResourceType || 'Select Resource' }} ▼
+            {{ currentResourceType || 'Select Resource' }} &#9662;
           </button>
 
           <div v-if="showResourceSelector" class="resource-selector-dropdown">
@@ -518,11 +726,10 @@ onMounted(() => {
         </div>
 
         <div class="toolbar-group" v-if="currentResourceType">
-          <button @click="openElementSelector" class="btn-secondary" :disabled="!availableResourceTypes.length">
-            Add Element ▼
+          <button @click="openElementSelector" class="btn-secondary">
+            Add Element &#9662;
           </button>
 
-          <!-- ✅ STEP 2 UPDATE: Show binding indicators in dropdown -->
           <div v-if="showElementSelector" class="element-selector-dropdown">
             <div v-for="element in availableElements" :key="element.path"
                  @click="addElement(element.path, element.type)"
@@ -530,11 +737,12 @@ onMounted(() => {
                  :class="{ 'has-binding': hasValueSetBinding(element.path) }">
               <span>{{ element.name }}</span>
               <span class="type-badge">{{ element.type }}</span>
-              <!-- Show indicator if element has ValueSet binding -->
+
               <span v-if="hasValueSetBinding(element.path)" class="binding-indicator" title="Has ValueSet options">
-                📋
+                &#128203;
               </span>
-              <button v-if="hasNestedElements(element.path)" @click.stop="drillDown(element.path)" class="expand-btn">▶</button>
+
+              <button v-if="hasNestedElements(element.path)" @click.stop="drillDown(element.path)" class="expand-btn">&#9654;</button>
             </div>
           </div>
         </div>
@@ -545,8 +753,23 @@ onMounted(() => {
         </div>
       </div>
 
+      <!-- Breadcrumb for drill-down navigation -->
+      <div v-if="currentElementPath" class="breadcrumb">
+        <span class="breadcrumb-item" @click="currentElementPath = ''; loadAvailableElements('')" style="cursor:pointer;">
+          {{ currentResourceType }}
+        </span>
+        <template v-for="(part, idx) in currentElementPath.split('.')" :key="idx">
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-item" @click="loadAvailableElements(currentElementPath.split('.').slice(0, idx + 1).join('.'))" style="cursor:pointer;">
+            {{ part }}
+          </span>
+        </template>
+      </div>
+
+      <!-- Error messages -->
       <div v-if="errorMessage" class="error-message">
         {{ errorMessage }}
+        <button @click="errorMessage = ''" style="float:right; background:none; border:none; cursor:pointer; font-size:1.2em;">&times;</button>
       </div>
 
       <div v-if="validationErrors.length > 0" class="validation-errors">
@@ -556,7 +779,9 @@ onMounted(() => {
         </ul>
       </div>
 
+      <!-- EDITOR CONTAINER -->
       <div class="editor-container" v-if="currentResourceType">
+
         <div class="editor-section">
           <h2>Resource Editor - {{ currentFhirVersion }} {{ currentResourceType }}</h2>
 
@@ -570,52 +795,124 @@ onMounted(() => {
             <input v-model="currentResource.id" @change="updateJson" />
           </div>
 
-          <!-- Show added elements with hierarchical support -->
+          <!-- ELEMENTS LIST WITH CONDITIONAL RENDERING -->
           <div class="profile-fields" v-if="selectedElements.length > 0">
             <h3>Resource Elements ({{ selectedElements.length }})</h3>
+
             <div v-for="element in selectedElements" :key="element.path" class="profile-field">
+
               <div class="field-header">
                 <span class="field-name">{{ element.path }}</span>
-                <span v-if="hasValueSetBinding(element.path)" class="binding-badge" title="Has predefined values">
-                  📋 Bound
+
+                <!-- Cardinality badge -->
+                <span v-if="element.min !== undefined" class="cardinality-badge" title="Cardinality">
+                  {{ element.min }}..{{ element.max }}
                 </span>
-                <button @click="removeElement(element.path)" 
-                        class="remove-btn" title="Remove element">×</button>
+
+                <!-- Type badge -->
+                <span class="type-badge">{{ element.type }}</span>
+
+                <!-- Binding indicator -->
+                <span v-if="hasValueSetBinding(element.path)"
+                      class="binding-badge"
+                      title="Has predefined values">
+                  &#128203; Bound
+                </span>
+
+                <button @click="removeElement(element.path)"
+                        class="remove-btn"
+                        title="Remove element">&times;</button>
               </div>
-              
-              <!-- ✅ SMART EDITOR: Dropdown for bound elements, input for regular -->
-              <select 
-                v-if="hasValueSetBinding(element.path)"
-                :value="element.value" 
-                @change="updateElementValue(element.path, ($event.target as HTMLSelectElement).value)"
-                class="form-select"
-              >
-                <option value="">-- Select {{ element.name }} --</option>
-                <option 
-                  v-for="option in getValueSetOptions(element.path)" 
-                  :key="option.code" 
-                  :value="option.code"
-                >
-                  {{ option.display }}
-                </option>
-              </select>
-              
-              <input 
-                v-else
-                v-model="element.value" 
-                @change="updateElementValue(element.path, element.value)" 
+
+              <!-- CASE 1: COMPLEX TYPE (HumanName, Address, etc.) -->
+              <complex-type-field
+                v-if="getElementType(element.type) === 'complex'"
+                :element="element"
+                :resource-data="currentResource"
+                :element-path="element.path"
+                :default-expanded="shouldAutoExpandComplexType(element.path)"
+                @update="handleComplexTypeUpdate"
               />
+
+              <!-- CASE 2: BOUND ELEMENT with ValueSet (gender, etc.) -->
+              <div v-else-if="hasValueSetBinding(element.path)" class="field-bound">
+
+                <!-- Loading indicator -->
+                <div v-if="loadingValueSets[element.path]" class="loading-indicator">
+                  Loading {{ element.name }} options...
+                </div>
+
+                <!-- Dropdown with loaded options -->
+                <select
+                  v-else
+                  :value="element.value"
+                  @change="updateElementValue(element.path, ($event.target as HTMLSelectElement).value)"
+                  class="form-select"
+                >
+                  <option value="">-- Select {{ element.name }} --</option>
+
+                  <option
+                    v-for="option in getValueSetOptions(element.path)"
+                    :key="option.code"
+                    :value="option.code"
+                  >
+                    {{ option.display }}
+                  </option>
+
+                  <option value="__custom__">Enter custom value...</option>
+                </select>
+
+                <!-- Custom value input (when "__custom__" selected) -->
+                <input
+                  v-if="element.value === '__custom__'"
+                  type="text"
+                  class="custom-input"
+                  placeholder="Enter custom value"
+                  @input="updateElementValue(element.path, ($event.target as HTMLInputElement).value)"
+                />
+
+                <!-- Binding metadata -->
+                <div class="binding-meta">
+                  <small class="binding-strength"
+                        :class="getElementBinding(element.path)?.strength || ''">
+                    {{ getElementBinding(element.path)?.strength || '' }}
+                  </small>
+
+                  <button
+                    v-if="!valueSetOptions[element.path] && !loadingValueSets[element.path]"
+                    @click="loadValueSetOptionsForElement(element.path)"
+                    class="btn-reload-options"
+                    title="Reload ValueSet options"
+                  >
+                    &#128260; Reload Options
+                  </button>
+                </div>
+              </div>
+
+              <!-- CASE 3: PRIMITIVE TYPE (string, integer, etc.) -->
+              <div v-else class="field-primitive">
+                <input
+                  :type="getInputType(element.type)"
+                  v-model="element.value"
+                  @change="updateElementValue(element.path, element.value)"
+                  :placeholder="'Enter ' + element.name"
+                  class="primitive-input"
+                />
+              </div>
+
             </div>
           </div>
-          
+
           <div v-else class="no-elements">
             <p>No elements added yet. Click "Add Element" to add fields.</p>
           </div>
         </div>
 
+        <!-- JSON Output Section -->
         <div class="editor-section">
           <h2>JSON Output</h2>
           <textarea v-model="jsonOutput" @change="onJsonChange" class="json-output"></textarea>
+
           <div class="json-actions">
             <button @click="copyToClipboard" class="btn-small">Copy JSON</button>
             <button @click="downloadJson" class="btn-small">Download JSON</button>
@@ -631,40 +928,31 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Open Resource Dialog -->
-    <div v-if="showOpenDialog" class="modal-overlay">
+    <!-- Dialogs -->
+    <div v-if="showOpenDialog" class="modal-overlay" @click.self="showOpenDialog = false">
       <div class="modal-dialog">
-        <div class="modal-header">
-          <h3>Open FHIR Resource</h3>
-          <button @click="showOpenDialog = false" class="close-btn">×</button>
-        </div>
-        <div class="modal-body">
-          <p>Upload a FHIR resource JSON file:</p>
-          <input type="file" @change="handleFileUpload" accept=".json" />
-          <p class="modal-hint">or drag and drop a file here</p>
-          <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-        </div>
+        <h3>Open FHIR Resource</h3>
+        <p>Select a JSON file containing a FHIR resource:</p>
+        <input type="file" accept=".json" @change="handleFileUpload" />
+        <button @click="showOpenDialog = false" class="btn-small" style="margin-top: 15px;">Cancel</button>
       </div>
     </div>
 
-    <!-- Export Dialog -->
-    <div v-if="showExportDialog" class="modal-overlay">
+    <div v-if="showExportDialog" class="modal-overlay" @click.self="showExportDialog = false">
       <div class="modal-dialog">
-        <div class="modal-header">
-          <h3>Export FHIR Resource</h3>
-          <button @click="showExportDialog = false" class="close-btn">×</button>
-        </div>
-        <div class="modal-body">
-          <p>Choose export format:</p>
-          <button @click="downloadJson" class="btn-primary">Download JSON</button>
-          <button @click="copyToClipboard" class="btn-secondary">Copy to Clipboard</button>
+        <h3>Export Resource</h3>
+        <p>Choose an export option:</p>
+        <div class="export-actions">
+          <button @click="copyToClipboard" class="btn-primary">Copy to Clipboard</button>
+          <button @click="downloadJson" class="btn-primary">Download JSON File</button>
+          <button @click="showExportDialog = false" class="btn-small" style="margin-top: 15px;">Cancel</button>
         </div>
       </div>
     </div>
 
     <footer class="fred-footer">
       <p>FHIR Resource Editor - Advanced Profile-Based Implementation</p>
-      <p>Hierarchical Elements | Profile-Driven UI | © 2024</p>
+      <p>Hierarchical Elements | Profile-Driven UI</p>
     </footer>
   </div>
 </template>
@@ -683,7 +971,6 @@ onMounted(() => {
 .fred-header {
   text-align: center;
   margin-bottom: 30px;
-  padding-bottom: 20px;
   border-bottom: 2px solid #e0e0e0;
   background: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
@@ -789,7 +1076,6 @@ onMounted(() => {
   font-weight: 600;
 }
 
-/* ✅ STEP 2: Highlight elements with bindings */
 .resource-option.has-binding {
   background-color: #e8f5e9;
   border-left: 3px solid #4caf50;
@@ -809,7 +1095,16 @@ onMounted(() => {
   font-weight: 500;
 }
 
-/* ✅ STEP 2: Binding indicator styles */
+.cardinality-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  background-color: #fff3e0;
+  color: #e65100;
+  border-radius: 10px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
 .binding-indicator {
   font-size: 14px;
   margin-left: 5px;
@@ -823,6 +1118,28 @@ onMounted(() => {
   border-radius: 10px;
   font-weight: 600;
   margin-left: 8px;
+}
+
+.breadcrumb {
+  margin-bottom: 15px;
+  padding: 8px 12px;
+  background: #f0f4ff;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.breadcrumb-item {
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.breadcrumb-item:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  color: #999;
+  margin: 0 4px;
 }
 
 @keyframes fadeIn {
@@ -861,6 +1178,8 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .field-name {
@@ -921,6 +1240,117 @@ onMounted(() => {
 .form-group input:disabled {
   background-color: #f5f5f5;
   color: #666;
+}
+
+.field-bound {
+  margin-top: 8px;
+}
+
+.form-select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #333333;
+  background-color: white;
+  cursor: pointer;
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: #42b983;
+  box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
+}
+
+.custom-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #42b983;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.loading-indicator {
+  padding: 10px;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  background: #f0f8ff;
+  border-radius: 4px;
+}
+
+.binding-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.binding-strength {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.binding-strength.required {
+  color: #c62828;
+  background-color: #ffebee;
+}
+
+.binding-strength.extensible {
+  color: #e65100;
+  background-color: #fff3e0;
+}
+
+.binding-strength.preferred {
+  color: #1565c0;
+  background-color: #e3f2fd;
+}
+
+.binding-strength.example {
+  color: #2e7d32;
+  background-color: #e8f5e9;
+}
+
+.btn-reload-options {
+  background: none;
+  border: 1px solid #ccc;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  color: #666;
+}
+
+.btn-reload-options:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+}
+
+.field-primitive {
+  margin-top: 8px;
+}
+
+.primitive-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color: #333333;
+}
+
+.primitive-input:focus {
+  outline: none;
+  border-color: #42b983;
+  box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.2);
 }
 
 .json-output {
@@ -1094,58 +1524,41 @@ onMounted(() => {
 }
 
 .modal-dialog {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 500px;
-  max-width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+.modal-dialog h3 {
+  margin-top: 0;
+  color: #2c3e50;
 }
 
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 1.5em;
-  cursor: pointer;
-  color: #999;
-  padding: 0;
-  line-height: 1;
-}
-
-.modal-body {
-  padding: 10px 0;
-}
-
-.modal-hint {
-  font-size: 0.9em;
-  color: #666;
+.modal-dialog input[type="file"] {
   margin-top: 10px;
-  font-style: italic;
+  width: 100%;
+}
+
+.export-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .fred-footer {
   margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
   text-align: center;
-  color: #666;
-  font-size: 14px;
+  padding: 15px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9em;
 }
 
-h2 {
-  color: #34495e;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-  margin-top: 0;
+.fred-footer p {
+  margin: 4px 0;
 }
 
 @media (max-width: 768px) {
@@ -1157,23 +1570,15 @@ h2 {
     flex-direction: column;
     align-items: stretch;
   }
-}
 
-.form-select {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #4caf50; /* Green border for bound fields */
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 14px;
-  color: #333333;
-  background-color: #fff;
-  cursor: pointer;
-}
+  .toolbar-group {
+    width: 100%;
+  }
 
-.form-select:focus {
-  outline: none;
-  border-color: #2e7d32;
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+  .version-selector-dropdown,
+  .resource-selector-dropdown,
+  .element-selector-dropdown {
+    width: 100%;
+  }
 }
 </style>
