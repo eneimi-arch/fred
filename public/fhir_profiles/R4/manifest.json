@@ -1,0 +1,1428 @@
+{
+  "_generated": "2026-05-01T23:24:13.648Z",
+  "versions": [
+    "R4"
+  ],
+  "R4": {
+    "resources": {
+      "Resource": {
+        "name": "Resource",
+        "type": "Resource",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Resource"
+      },
+      "Account": {
+        "name": "Account",
+        "type": "Account",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Account"
+      },
+      "ActivityDefinition": {
+        "name": "ActivityDefinition",
+        "type": "ActivityDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ActivityDefinition"
+      },
+      "AdverseEvent": {
+        "name": "AdverseEvent",
+        "type": "AdverseEvent",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/AdverseEvent"
+      },
+      "AllergyIntolerance": {
+        "name": "AllergyIntolerance",
+        "type": "AllergyIntolerance",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/AllergyIntolerance"
+      },
+      "Appointment": {
+        "name": "Appointment",
+        "type": "Appointment",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Appointment"
+      },
+      "AppointmentResponse": {
+        "name": "AppointmentResponse",
+        "type": "AppointmentResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/AppointmentResponse"
+      },
+      "AuditEvent": {
+        "name": "AuditEvent",
+        "type": "AuditEvent",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/AuditEvent"
+      },
+      "Basic": {
+        "name": "Basic",
+        "type": "Basic",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Basic"
+      },
+      "Binary": {
+        "name": "Binary",
+        "type": "Binary",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Binary"
+      },
+      "BiologicallyDerivedProduct": {
+        "name": "BiologicallyDerivedProduct",
+        "type": "BiologicallyDerivedProduct",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/BiologicallyDerivedProduct"
+      },
+      "BodyStructure": {
+        "name": "BodyStructure",
+        "type": "BodyStructure",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/BodyStructure"
+      },
+      "Bundle": {
+        "name": "Bundle",
+        "type": "Bundle",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Bundle"
+      },
+      "CapabilityStatement": {
+        "name": "CapabilityStatement",
+        "type": "CapabilityStatement",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CapabilityStatement"
+      },
+      "CarePlan": {
+        "name": "CarePlan",
+        "type": "CarePlan",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CarePlan"
+      },
+      "CareTeam": {
+        "name": "CareTeam",
+        "type": "CareTeam",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CareTeam"
+      },
+      "CatalogEntry": {
+        "name": "CatalogEntry",
+        "type": "CatalogEntry",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CatalogEntry"
+      },
+      "ChargeItem": {
+        "name": "ChargeItem",
+        "type": "ChargeItem",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ChargeItem"
+      },
+      "ChargeItemDefinition": {
+        "name": "ChargeItemDefinition",
+        "type": "ChargeItemDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ChargeItemDefinition"
+      },
+      "Claim": {
+        "name": "Claim",
+        "type": "Claim",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Claim"
+      },
+      "ClaimResponse": {
+        "name": "ClaimResponse",
+        "type": "ClaimResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ClaimResponse"
+      },
+      "ClinicalImpression": {
+        "name": "ClinicalImpression",
+        "type": "ClinicalImpression",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ClinicalImpression"
+      },
+      "CodeSystem": {
+        "name": "CodeSystem",
+        "type": "CodeSystem",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CodeSystem"
+      },
+      "Communication": {
+        "name": "Communication",
+        "type": "Communication",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Communication"
+      },
+      "CommunicationRequest": {
+        "name": "CommunicationRequest",
+        "type": "CommunicationRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CommunicationRequest"
+      },
+      "CompartmentDefinition": {
+        "name": "CompartmentDefinition",
+        "type": "CompartmentDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CompartmentDefinition"
+      },
+      "Composition": {
+        "name": "Composition",
+        "type": "Composition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Composition"
+      },
+      "ConceptMap": {
+        "name": "ConceptMap",
+        "type": "ConceptMap",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ConceptMap"
+      },
+      "Condition": {
+        "name": "Condition",
+        "type": "Condition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Condition"
+      },
+      "Consent": {
+        "name": "Consent",
+        "type": "Consent",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Consent"
+      },
+      "Contract": {
+        "name": "Contract",
+        "type": "Contract",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Contract"
+      },
+      "Coverage": {
+        "name": "Coverage",
+        "type": "Coverage",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Coverage"
+      },
+      "CoverageEligibilityRequest": {
+        "name": "CoverageEligibilityRequest",
+        "type": "CoverageEligibilityRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CoverageEligibilityRequest"
+      },
+      "CoverageEligibilityResponse": {
+        "name": "CoverageEligibilityResponse",
+        "type": "CoverageEligibilityResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/CoverageEligibilityResponse"
+      },
+      "DetectedIssue": {
+        "name": "DetectedIssue",
+        "type": "DetectedIssue",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DetectedIssue"
+      },
+      "Device": {
+        "name": "Device",
+        "type": "Device",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Device"
+      },
+      "DeviceDefinition": {
+        "name": "DeviceDefinition",
+        "type": "DeviceDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DeviceDefinition"
+      },
+      "DeviceMetric": {
+        "name": "DeviceMetric",
+        "type": "DeviceMetric",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DeviceMetric"
+      },
+      "DeviceRequest": {
+        "name": "DeviceRequest",
+        "type": "DeviceRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DeviceRequest"
+      },
+      "DeviceUseStatement": {
+        "name": "DeviceUseStatement",
+        "type": "DeviceUseStatement",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DeviceUseStatement"
+      },
+      "DiagnosticReport": {
+        "name": "DiagnosticReport",
+        "type": "DiagnosticReport",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DiagnosticReport"
+      },
+      "DocumentManifest": {
+        "name": "DocumentManifest",
+        "type": "DocumentManifest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DocumentManifest"
+      },
+      "DocumentReference": {
+        "name": "DocumentReference",
+        "type": "DocumentReference",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DocumentReference"
+      },
+      "DomainResource": {
+        "name": "DomainResource",
+        "type": "DomainResource",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/DomainResource"
+      },
+      "EffectEvidenceSynthesis": {
+        "name": "EffectEvidenceSynthesis",
+        "type": "EffectEvidenceSynthesis",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EffectEvidenceSynthesis"
+      },
+      "Encounter": {
+        "name": "Encounter",
+        "type": "Encounter",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Encounter"
+      },
+      "Endpoint": {
+        "name": "Endpoint",
+        "type": "Endpoint",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Endpoint"
+      },
+      "EnrollmentRequest": {
+        "name": "EnrollmentRequest",
+        "type": "EnrollmentRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EnrollmentRequest"
+      },
+      "EnrollmentResponse": {
+        "name": "EnrollmentResponse",
+        "type": "EnrollmentResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EnrollmentResponse"
+      },
+      "EpisodeOfCare": {
+        "name": "EpisodeOfCare",
+        "type": "EpisodeOfCare",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EpisodeOfCare"
+      },
+      "EventDefinition": {
+        "name": "EventDefinition",
+        "type": "EventDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EventDefinition"
+      },
+      "Evidence": {
+        "name": "Evidence",
+        "type": "Evidence",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Evidence"
+      },
+      "EvidenceVariable": {
+        "name": "EvidenceVariable",
+        "type": "EvidenceVariable",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/EvidenceVariable"
+      },
+      "ExampleScenario": {
+        "name": "ExampleScenario",
+        "type": "ExampleScenario",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ExampleScenario"
+      },
+      "ExplanationOfBenefit": {
+        "name": "ExplanationOfBenefit",
+        "type": "ExplanationOfBenefit",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ExplanationOfBenefit"
+      },
+      "FamilyMemberHistory": {
+        "name": "FamilyMemberHistory",
+        "type": "FamilyMemberHistory",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/FamilyMemberHistory"
+      },
+      "Flag": {
+        "name": "Flag",
+        "type": "Flag",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Flag"
+      },
+      "Goal": {
+        "name": "Goal",
+        "type": "Goal",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Goal"
+      },
+      "GraphDefinition": {
+        "name": "GraphDefinition",
+        "type": "GraphDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/GraphDefinition"
+      },
+      "Group": {
+        "name": "Group",
+        "type": "Group",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Group"
+      },
+      "GuidanceResponse": {
+        "name": "GuidanceResponse",
+        "type": "GuidanceResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/GuidanceResponse"
+      },
+      "HealthcareService": {
+        "name": "HealthcareService",
+        "type": "HealthcareService",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/HealthcareService"
+      },
+      "ImagingStudy": {
+        "name": "ImagingStudy",
+        "type": "ImagingStudy",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ImagingStudy"
+      },
+      "Immunization": {
+        "name": "Immunization",
+        "type": "Immunization",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Immunization"
+      },
+      "ImmunizationEvaluation": {
+        "name": "ImmunizationEvaluation",
+        "type": "ImmunizationEvaluation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ImmunizationEvaluation"
+      },
+      "ImmunizationRecommendation": {
+        "name": "ImmunizationRecommendation",
+        "type": "ImmunizationRecommendation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ImmunizationRecommendation"
+      },
+      "ImplementationGuide": {
+        "name": "ImplementationGuide",
+        "type": "ImplementationGuide",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ImplementationGuide"
+      },
+      "InsurancePlan": {
+        "name": "InsurancePlan",
+        "type": "InsurancePlan",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/InsurancePlan"
+      },
+      "Invoice": {
+        "name": "Invoice",
+        "type": "Invoice",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Invoice"
+      },
+      "Library": {
+        "name": "Library",
+        "type": "Library",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Library"
+      },
+      "Linkage": {
+        "name": "Linkage",
+        "type": "Linkage",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Linkage"
+      },
+      "List": {
+        "name": "List",
+        "type": "List",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/List"
+      },
+      "Location": {
+        "name": "Location",
+        "type": "Location",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Location"
+      },
+      "Measure": {
+        "name": "Measure",
+        "type": "Measure",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Measure"
+      },
+      "MeasureReport": {
+        "name": "MeasureReport",
+        "type": "MeasureReport",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MeasureReport"
+      },
+      "Media": {
+        "name": "Media",
+        "type": "Media",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Media"
+      },
+      "Medication": {
+        "name": "Medication",
+        "type": "Medication",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Medication"
+      },
+      "MedicationAdministration": {
+        "name": "MedicationAdministration",
+        "type": "MedicationAdministration",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicationAdministration"
+      },
+      "MedicationDispense": {
+        "name": "MedicationDispense",
+        "type": "MedicationDispense",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicationDispense"
+      },
+      "MedicationKnowledge": {
+        "name": "MedicationKnowledge",
+        "type": "MedicationKnowledge",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicationKnowledge"
+      },
+      "MedicationRequest": {
+        "name": "MedicationRequest",
+        "type": "MedicationRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicationRequest"
+      },
+      "MedicationStatement": {
+        "name": "MedicationStatement",
+        "type": "MedicationStatement",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicationStatement"
+      },
+      "MedicinalProduct": {
+        "name": "MedicinalProduct",
+        "type": "MedicinalProduct",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProduct"
+      },
+      "MedicinalProductAuthorization": {
+        "name": "MedicinalProductAuthorization",
+        "type": "MedicinalProductAuthorization",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductAuthorization"
+      },
+      "MedicinalProductContraindication": {
+        "name": "MedicinalProductContraindication",
+        "type": "MedicinalProductContraindication",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductContraindication"
+      },
+      "MedicinalProductIndication": {
+        "name": "MedicinalProductIndication",
+        "type": "MedicinalProductIndication",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductIndication"
+      },
+      "MedicinalProductIngredient": {
+        "name": "MedicinalProductIngredient",
+        "type": "MedicinalProductIngredient",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductIngredient"
+      },
+      "MedicinalProductInteraction": {
+        "name": "MedicinalProductInteraction",
+        "type": "MedicinalProductInteraction",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductInteraction"
+      },
+      "MedicinalProductManufactured": {
+        "name": "MedicinalProductManufactured",
+        "type": "MedicinalProductManufactured",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductManufactured"
+      },
+      "MedicinalProductPackaged": {
+        "name": "MedicinalProductPackaged",
+        "type": "MedicinalProductPackaged",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductPackaged"
+      },
+      "MedicinalProductPharmaceutical": {
+        "name": "MedicinalProductPharmaceutical",
+        "type": "MedicinalProductPharmaceutical",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductPharmaceutical"
+      },
+      "MedicinalProductUndesirableEffect": {
+        "name": "MedicinalProductUndesirableEffect",
+        "type": "MedicinalProductUndesirableEffect",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MedicinalProductUndesirableEffect"
+      },
+      "MessageDefinition": {
+        "name": "MessageDefinition",
+        "type": "MessageDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MessageDefinition"
+      },
+      "MessageHeader": {
+        "name": "MessageHeader",
+        "type": "MessageHeader",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MessageHeader"
+      },
+      "MolecularSequence": {
+        "name": "MolecularSequence",
+        "type": "MolecularSequence",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/MolecularSequence"
+      },
+      "NamingSystem": {
+        "name": "NamingSystem",
+        "type": "NamingSystem",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/NamingSystem"
+      },
+      "NutritionOrder": {
+        "name": "NutritionOrder",
+        "type": "NutritionOrder",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/NutritionOrder"
+      },
+      "Observation": {
+        "name": "Observation",
+        "type": "Observation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Observation"
+      },
+      "ObservationDefinition": {
+        "name": "ObservationDefinition",
+        "type": "ObservationDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ObservationDefinition"
+      },
+      "OperationDefinition": {
+        "name": "OperationDefinition",
+        "type": "OperationDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/OperationDefinition"
+      },
+      "OperationOutcome": {
+        "name": "OperationOutcome",
+        "type": "OperationOutcome",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/OperationOutcome"
+      },
+      "Organization": {
+        "name": "Organization",
+        "type": "Organization",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Organization"
+      },
+      "OrganizationAffiliation": {
+        "name": "OrganizationAffiliation",
+        "type": "OrganizationAffiliation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/OrganizationAffiliation"
+      },
+      "Parameters": {
+        "name": "Parameters",
+        "type": "Parameters",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Parameters"
+      },
+      "Patient": {
+        "name": "Patient",
+        "type": "Patient",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Patient"
+      },
+      "PaymentNotice": {
+        "name": "PaymentNotice",
+        "type": "PaymentNotice",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/PaymentNotice"
+      },
+      "PaymentReconciliation": {
+        "name": "PaymentReconciliation",
+        "type": "PaymentReconciliation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/PaymentReconciliation"
+      },
+      "Person": {
+        "name": "Person",
+        "type": "Person",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Person"
+      },
+      "PlanDefinition": {
+        "name": "PlanDefinition",
+        "type": "PlanDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/PlanDefinition"
+      },
+      "Practitioner": {
+        "name": "Practitioner",
+        "type": "Practitioner",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Practitioner"
+      },
+      "PractitionerRole": {
+        "name": "PractitionerRole",
+        "type": "PractitionerRole",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/PractitionerRole"
+      },
+      "Procedure": {
+        "name": "Procedure",
+        "type": "Procedure",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Procedure"
+      },
+      "Provenance": {
+        "name": "Provenance",
+        "type": "Provenance",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Provenance"
+      },
+      "Questionnaire": {
+        "name": "Questionnaire",
+        "type": "Questionnaire",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Questionnaire"
+      },
+      "QuestionnaireResponse": {
+        "name": "QuestionnaireResponse",
+        "type": "QuestionnaireResponse",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/QuestionnaireResponse"
+      },
+      "RelatedPerson": {
+        "name": "RelatedPerson",
+        "type": "RelatedPerson",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/RelatedPerson"
+      },
+      "RequestGroup": {
+        "name": "RequestGroup",
+        "type": "RequestGroup",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/RequestGroup"
+      },
+      "ResearchDefinition": {
+        "name": "ResearchDefinition",
+        "type": "ResearchDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ResearchDefinition"
+      },
+      "ResearchElementDefinition": {
+        "name": "ResearchElementDefinition",
+        "type": "ResearchElementDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ResearchElementDefinition"
+      },
+      "ResearchStudy": {
+        "name": "ResearchStudy",
+        "type": "ResearchStudy",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ResearchStudy"
+      },
+      "ResearchSubject": {
+        "name": "ResearchSubject",
+        "type": "ResearchSubject",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ResearchSubject"
+      },
+      "RiskAssessment": {
+        "name": "RiskAssessment",
+        "type": "RiskAssessment",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/RiskAssessment"
+      },
+      "RiskEvidenceSynthesis": {
+        "name": "RiskEvidenceSynthesis",
+        "type": "RiskEvidenceSynthesis",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/RiskEvidenceSynthesis"
+      },
+      "Schedule": {
+        "name": "Schedule",
+        "type": "Schedule",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Schedule"
+      },
+      "SearchParameter": {
+        "name": "SearchParameter",
+        "type": "SearchParameter",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SearchParameter"
+      },
+      "ServiceRequest": {
+        "name": "ServiceRequest",
+        "type": "ServiceRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ServiceRequest"
+      },
+      "Slot": {
+        "name": "Slot",
+        "type": "Slot",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Slot"
+      },
+      "Specimen": {
+        "name": "Specimen",
+        "type": "Specimen",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Specimen"
+      },
+      "SpecimenDefinition": {
+        "name": "SpecimenDefinition",
+        "type": "SpecimenDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SpecimenDefinition"
+      },
+      "StructureDefinition": {
+        "name": "StructureDefinition",
+        "type": "StructureDefinition",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/StructureDefinition"
+      },
+      "StructureMap": {
+        "name": "StructureMap",
+        "type": "StructureMap",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/StructureMap"
+      },
+      "Subscription": {
+        "name": "Subscription",
+        "type": "Subscription",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Subscription"
+      },
+      "Substance": {
+        "name": "Substance",
+        "type": "Substance",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Substance"
+      },
+      "SubstanceNucleicAcid": {
+        "name": "SubstanceNucleicAcid",
+        "type": "SubstanceNucleicAcid",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceNucleicAcid"
+      },
+      "SubstancePolymer": {
+        "name": "SubstancePolymer",
+        "type": "SubstancePolymer",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstancePolymer"
+      },
+      "SubstanceProtein": {
+        "name": "SubstanceProtein",
+        "type": "SubstanceProtein",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceProtein"
+      },
+      "SubstanceReferenceInformation": {
+        "name": "SubstanceReferenceInformation",
+        "type": "SubstanceReferenceInformation",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceReferenceInformation"
+      },
+      "SubstanceSourceMaterial": {
+        "name": "SubstanceSourceMaterial",
+        "type": "SubstanceSourceMaterial",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceSourceMaterial"
+      },
+      "SubstanceSpecification": {
+        "name": "SubstanceSpecification",
+        "type": "SubstanceSpecification",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceSpecification"
+      },
+      "SupplyDelivery": {
+        "name": "SupplyDelivery",
+        "type": "SupplyDelivery",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SupplyDelivery"
+      },
+      "SupplyRequest": {
+        "name": "SupplyRequest",
+        "type": "SupplyRequest",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/SupplyRequest"
+      },
+      "Task": {
+        "name": "Task",
+        "type": "Task",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/Task"
+      },
+      "TerminologyCapabilities": {
+        "name": "TerminologyCapabilities",
+        "type": "TerminologyCapabilities",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/TerminologyCapabilities"
+      },
+      "TestReport": {
+        "name": "TestReport",
+        "type": "TestReport",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/TestReport"
+      },
+      "TestScript": {
+        "name": "TestScript",
+        "type": "TestScript",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/TestScript"
+      },
+      "ValueSet": {
+        "name": "ValueSet",
+        "type": "ValueSet",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/ValueSet"
+      },
+      "VerificationResult": {
+        "name": "VerificationResult",
+        "type": "VerificationResult",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/VerificationResult"
+      },
+      "VisionPrescription": {
+        "name": "VisionPrescription",
+        "type": "VisionPrescription",
+        "kind": "resource",
+        "url": "http://hl7.org/fhir/StructureDefinition/VisionPrescription"
+      }
+    },
+    "types": {
+      "Element": {
+        "name": "Element",
+        "type": "Element",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Element"
+      },
+      "BackboneElement": {
+        "name": "BackboneElement",
+        "type": "BackboneElement",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/BackboneElement"
+      },
+      "base64Binary": {
+        "name": "base64Binary",
+        "type": "base64Binary",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/base64Binary"
+      },
+      "boolean": {
+        "name": "boolean",
+        "type": "boolean",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/boolean"
+      },
+      "canonical": {
+        "name": "canonical",
+        "type": "canonical",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/canonical"
+      },
+      "code": {
+        "name": "code",
+        "type": "code",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/code"
+      },
+      "date": {
+        "name": "date",
+        "type": "date",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/date"
+      },
+      "dateTime": {
+        "name": "dateTime",
+        "type": "dateTime",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/dateTime"
+      },
+      "decimal": {
+        "name": "decimal",
+        "type": "decimal",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/decimal"
+      },
+      "id": {
+        "name": "id",
+        "type": "id",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/id"
+      },
+      "instant": {
+        "name": "instant",
+        "type": "instant",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/instant"
+      },
+      "integer": {
+        "name": "integer",
+        "type": "integer",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/integer"
+      },
+      "markdown": {
+        "name": "markdown",
+        "type": "markdown",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/markdown"
+      },
+      "oid": {
+        "name": "oid",
+        "type": "oid",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/oid"
+      },
+      "positiveInt": {
+        "name": "positiveInt",
+        "type": "positiveInt",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/positiveInt"
+      },
+      "string": {
+        "name": "string",
+        "type": "string",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/string"
+      },
+      "time": {
+        "name": "time",
+        "type": "time",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/time"
+      },
+      "unsignedInt": {
+        "name": "unsignedInt",
+        "type": "unsignedInt",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/unsignedInt"
+      },
+      "uri": {
+        "name": "uri",
+        "type": "uri",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/uri"
+      },
+      "url": {
+        "name": "url",
+        "type": "url",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/url"
+      },
+      "uuid": {
+        "name": "uuid",
+        "type": "uuid",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/uuid"
+      },
+      "xhtml": {
+        "name": "xhtml",
+        "type": "xhtml",
+        "kind": "primitive-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/xhtml"
+      },
+      "Address": {
+        "name": "Address",
+        "type": "Address",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Address"
+      },
+      "Age": {
+        "name": "Age",
+        "type": "Age",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Age"
+      },
+      "Annotation": {
+        "name": "Annotation",
+        "type": "Annotation",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Annotation"
+      },
+      "Attachment": {
+        "name": "Attachment",
+        "type": "Attachment",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Attachment"
+      },
+      "CodeableConcept": {
+        "name": "CodeableConcept",
+        "type": "CodeableConcept",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/CodeableConcept"
+      },
+      "Coding": {
+        "name": "Coding",
+        "type": "Coding",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Coding"
+      },
+      "ContactDetail": {
+        "name": "ContactDetail",
+        "type": "ContactDetail",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ContactDetail"
+      },
+      "ContactPoint": {
+        "name": "ContactPoint",
+        "type": "ContactPoint",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ContactPoint"
+      },
+      "Contributor": {
+        "name": "Contributor",
+        "type": "Contributor",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Contributor"
+      },
+      "Count": {
+        "name": "Count",
+        "type": "Count",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Count"
+      },
+      "DataRequirement": {
+        "name": "DataRequirement",
+        "type": "DataRequirement",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/DataRequirement"
+      },
+      "Distance": {
+        "name": "Distance",
+        "type": "Distance",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Distance"
+      },
+      "Dosage": {
+        "name": "Dosage",
+        "type": "Dosage",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Dosage"
+      },
+      "Duration": {
+        "name": "Duration",
+        "type": "Duration",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Duration"
+      },
+      "ElementDefinition": {
+        "name": "ElementDefinition",
+        "type": "ElementDefinition",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ElementDefinition"
+      },
+      "Expression": {
+        "name": "Expression",
+        "type": "Expression",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Expression"
+      },
+      "Extension": {
+        "name": "Extension",
+        "type": "Extension",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Extension"
+      },
+      "HumanName": {
+        "name": "HumanName",
+        "type": "HumanName",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/HumanName"
+      },
+      "Identifier": {
+        "name": "Identifier",
+        "type": "Identifier",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Identifier"
+      },
+      "MarketingStatus": {
+        "name": "MarketingStatus",
+        "type": "MarketingStatus",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/MarketingStatus"
+      },
+      "Meta": {
+        "name": "Meta",
+        "type": "Meta",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Meta"
+      },
+      "Money": {
+        "name": "Money",
+        "type": "Money",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Money"
+      },
+      "Narrative": {
+        "name": "Narrative",
+        "type": "Narrative",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Narrative"
+      },
+      "ParameterDefinition": {
+        "name": "ParameterDefinition",
+        "type": "ParameterDefinition",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ParameterDefinition"
+      },
+      "Period": {
+        "name": "Period",
+        "type": "Period",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Period"
+      },
+      "Population": {
+        "name": "Population",
+        "type": "Population",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Population"
+      },
+      "ProdCharacteristic": {
+        "name": "ProdCharacteristic",
+        "type": "ProdCharacteristic",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ProdCharacteristic"
+      },
+      "ProductShelfLife": {
+        "name": "ProductShelfLife",
+        "type": "ProductShelfLife",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/ProductShelfLife"
+      },
+      "Quantity": {
+        "name": "Quantity",
+        "type": "Quantity",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Quantity"
+      },
+      "Range": {
+        "name": "Range",
+        "type": "Range",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Range"
+      },
+      "Ratio": {
+        "name": "Ratio",
+        "type": "Ratio",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Ratio"
+      },
+      "Reference": {
+        "name": "Reference",
+        "type": "Reference",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Reference"
+      },
+      "RelatedArtifact": {
+        "name": "RelatedArtifact",
+        "type": "RelatedArtifact",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/RelatedArtifact"
+      },
+      "SampledData": {
+        "name": "SampledData",
+        "type": "SampledData",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/SampledData"
+      },
+      "Signature": {
+        "name": "Signature",
+        "type": "Signature",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Signature"
+      },
+      "SubstanceAmount": {
+        "name": "SubstanceAmount",
+        "type": "SubstanceAmount",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/SubstanceAmount"
+      },
+      "Timing": {
+        "name": "Timing",
+        "type": "Timing",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/Timing"
+      },
+      "TriggerDefinition": {
+        "name": "TriggerDefinition",
+        "type": "TriggerDefinition",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/TriggerDefinition"
+      },
+      "UsageContext": {
+        "name": "UsageContext",
+        "type": "UsageContext",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/UsageContext"
+      },
+      "MoneyQuantity": {
+        "name": "MoneyQuantity",
+        "type": "Quantity",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/MoneyQuantity"
+      },
+      "SimpleQuantity": {
+        "name": "SimpleQuantity",
+        "type": "Quantity",
+        "kind": "complex-type",
+        "url": "http://hl7.org/fhir/StructureDefinition/SimpleQuantity"
+      }
+    },
+    "resourceTypes": [
+      "Account",
+      "ActivityDefinition",
+      "AdverseEvent",
+      "AllergyIntolerance",
+      "Appointment",
+      "AppointmentResponse",
+      "AuditEvent",
+      "Basic",
+      "Binary",
+      "BiologicallyDerivedProduct",
+      "BodyStructure",
+      "Bundle",
+      "CapabilityStatement",
+      "CarePlan",
+      "CareTeam",
+      "CatalogEntry",
+      "ChargeItem",
+      "ChargeItemDefinition",
+      "Claim",
+      "ClaimResponse",
+      "ClinicalImpression",
+      "CodeSystem",
+      "Communication",
+      "CommunicationRequest",
+      "CompartmentDefinition",
+      "Composition",
+      "ConceptMap",
+      "Condition",
+      "Consent",
+      "Contract",
+      "Coverage",
+      "CoverageEligibilityRequest",
+      "CoverageEligibilityResponse",
+      "DetectedIssue",
+      "Device",
+      "DeviceDefinition",
+      "DeviceMetric",
+      "DeviceRequest",
+      "DeviceUseStatement",
+      "DiagnosticReport",
+      "DocumentManifest",
+      "DocumentReference",
+      "DomainResource",
+      "EffectEvidenceSynthesis",
+      "Encounter",
+      "Endpoint",
+      "EnrollmentRequest",
+      "EnrollmentResponse",
+      "EpisodeOfCare",
+      "EventDefinition",
+      "Evidence",
+      "EvidenceVariable",
+      "ExampleScenario",
+      "ExplanationOfBenefit",
+      "FamilyMemberHistory",
+      "Flag",
+      "Goal",
+      "GraphDefinition",
+      "Group",
+      "GuidanceResponse",
+      "HealthcareService",
+      "ImagingStudy",
+      "Immunization",
+      "ImmunizationEvaluation",
+      "ImmunizationRecommendation",
+      "ImplementationGuide",
+      "InsurancePlan",
+      "Invoice",
+      "Library",
+      "Linkage",
+      "List",
+      "Location",
+      "Measure",
+      "MeasureReport",
+      "Media",
+      "Medication",
+      "MedicationAdministration",
+      "MedicationDispense",
+      "MedicationKnowledge",
+      "MedicationRequest",
+      "MedicationStatement",
+      "MedicinalProduct",
+      "MedicinalProductAuthorization",
+      "MedicinalProductContraindication",
+      "MedicinalProductIndication",
+      "MedicinalProductIngredient",
+      "MedicinalProductInteraction",
+      "MedicinalProductManufactured",
+      "MedicinalProductPackaged",
+      "MedicinalProductPharmaceutical",
+      "MedicinalProductUndesirableEffect",
+      "MessageDefinition",
+      "MessageHeader",
+      "MolecularSequence",
+      "NamingSystem",
+      "NutritionOrder",
+      "Observation",
+      "ObservationDefinition",
+      "OperationDefinition",
+      "OperationOutcome",
+      "Organization",
+      "OrganizationAffiliation",
+      "Parameters",
+      "Patient",
+      "PaymentNotice",
+      "PaymentReconciliation",
+      "Person",
+      "PlanDefinition",
+      "Practitioner",
+      "PractitionerRole",
+      "Procedure",
+      "Provenance",
+      "Questionnaire",
+      "QuestionnaireResponse",
+      "RelatedPerson",
+      "RequestGroup",
+      "ResearchDefinition",
+      "ResearchElementDefinition",
+      "ResearchStudy",
+      "ResearchSubject",
+      "Resource",
+      "RiskAssessment",
+      "RiskEvidenceSynthesis",
+      "Schedule",
+      "SearchParameter",
+      "ServiceRequest",
+      "Slot",
+      "Specimen",
+      "SpecimenDefinition",
+      "StructureDefinition",
+      "StructureMap",
+      "Subscription",
+      "Substance",
+      "SubstanceNucleicAcid",
+      "SubstancePolymer",
+      "SubstanceProtein",
+      "SubstanceReferenceInformation",
+      "SubstanceSourceMaterial",
+      "SubstanceSpecification",
+      "SupplyDelivery",
+      "SupplyRequest",
+      "Task",
+      "TerminologyCapabilities",
+      "TestReport",
+      "TestScript",
+      "ValueSet",
+      "VerificationResult",
+      "VisionPrescription"
+    ]
+  }
+}

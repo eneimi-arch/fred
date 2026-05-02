@@ -1,8 +1,34 @@
 <template>
   <div class="field-renderer" :class="{ 'is-complex': checkIsComplex, 'is-array': isArrayField }">
 
-    <!-- Array field: render multiple items -->
-    <template v-if="isArrayField && checkIsPrimitive">
+    <!-- Array of complex type items (e.g. coding[] is array of Coding) -->
+    <template v-if="isArrayField && checkIsComplex">
+      <div class="array-complex-items">
+        <div
+          v-for="(item, index) in arrayValue"
+          :key="index"
+          class="array-complex-item"
+        >
+          <div class="array-item-header">
+            <span class="array-item-label">{{ element.name || fieldName }} [{{ index + 1 }}]</span>
+            <button @click="removeComplexArrayItem(index)" class="btn-remove-item" title="Remove">&times;</button>
+          </div>
+          <complex-type-field
+            :element="singleItemElement"
+            :resource-data="arrayValue[index] || {}"
+            :element-path="''"
+            :depth="(depth || 0) + 1"
+            :default-expanded="true"
+            @update="handleComplexArrayItemUpdate($event, index)"
+          />
+        </div>
+        <button @click="addComplexArrayItem" class="btn-add-item">+ Add {{ element.name || fieldName }}</button>
+      </div>
+    </template>
+
+    <!-- Array of primitive values: render multiple inputs -->
+    <template v-else-if="isArrayField && checkIsPrimitive">
+      <div class="field-label-row"><span class="field-label">{{ element.name || fieldName }}</span></div>
       <div class="array-items">
         <div v-for="(item, index) in arrayValue" :key="index" class="array-item">
           <div class="array-item-header">
@@ -21,24 +47,28 @@
       </div>
     </template>
 
-    <!-- Complex type field: render as expandable -->
+    <!-- Complex type field (single): recurse with ComplexTypeField -->
     <template v-else-if="checkIsComplex">
-      <div class="complex-field-preview">
-        <span class="complex-label">{{ element.name || fieldName }}</span>
-        <span class="type-tag">{{ firstTypeCode }}</span>
-        <span class="complex-preview-text">{{ getComplexPreview() }}</span>
-      </div>
+      <complex-type-field
+        :element="element"
+        :resource-data="resourceData"
+        :element-path="resolvedPath"
+        :depth="(depth || 0) + 1"
+        :default-expanded="true"
+        @update="emitUpdate"
+      />
     </template>
 
     <!-- Bound element with ValueSet -->
     <template v-else-if="hasBinding">
+      <div class="field-label-row"><span class="field-label">{{ element.name || fieldName }}</span></div>
       <div class="bound-field">
         <select
           :value="fieldValue"
           @change="emitUpdate(($event.target as HTMLSelectElement).value)"
           class="field-select"
         >
-          <option value="">-- Select {{ element.name || fieldName }} --</option>
+          <option value="">-- Select --</option>
           <option
             v-for="option in getBindingOptions()"
             :key="option.code"
@@ -64,6 +94,7 @@
 
     <!-- Boolean field: checkbox -->
     <template v-else-if="firstTypeCode === 'boolean'">
+      <div class="field-label-row"><span class="field-label">{{ element.name || fieldName }}</span></div>
       <label class="boolean-field">
         <input
           type="checkbox"
@@ -76,6 +107,7 @@
 
     <!-- Default: simple text/number input -->
     <template v-else>
+      <div class="field-label-row"><span class="field-label">{{ element.name || fieldName }}</span></div>
       <input
         :type="getInputType(firstTypeCode)"
         :value="fieldValue"
@@ -90,6 +122,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { isComplexType, isPrimitiveType } from '@/fhir/complexTypes';
+import ComplexTypeField from './ComplexTypeField.vue';
 
 // ============================================
 // PROPS & EMITS
@@ -133,7 +166,14 @@ const fieldName = computed<string>(() => {
   return props.element.path.split('.').pop() || '';
 });
 
-// Get the first type code safely (replaces all element?.type?.[0]?.code)
+// Full resolved path including parent context
+const resolvedPath = computed<string>(() => {
+  const base = props.parentPath || '';
+  const name = fieldName.value;
+  return base ? `${base}.${name}` : name;
+});
+
+// Get the first type code safely
 const firstTypeCode = computed<string>(() => {
   const el = props.element;
   if (!el) return '';
@@ -159,6 +199,13 @@ const isArrayField = computed<boolean>(() => {
   return max === '*' ||
          (typeof max === 'string' && parseInt(max) > 1);
 });
+
+// Element with max='1' for rendering individual array items as single objects
+// (prevents ComplexTypeField from entering array mode for each item)
+const singleItemElement = computed<FhirElement>(() => ({
+  ...props.element,
+  max: '1'
+}));
 
 // Get the current value from the parent resource data
 const fieldValue = computed<any>(() => {
@@ -277,38 +324,6 @@ function getBindingOptions(): Array<{ code: string; display: string }> {
   return optionsMap[valueSetUrl] || [];
 }
 
-// Get a human-readable preview for complex type values
-function getComplexPreview(): string {
-  const val = fieldValue.value;
-  if (!val) return '(empty)';
-
-  const typeName = firstTypeCode.value;
-
-  switch (typeName) {
-    case 'Period':
-      if (val.start || val.end) {
-        return `${val.start || '?'} - ${val.end || '?'}`;
-      }
-      return '(empty period)';
-
-    case 'Coding':
-      return [val.system, val.code, val.display].filter(Boolean).join(' | ') || '(empty)';
-
-    case 'CodeableConcept':
-      if (val.coding && val.coding.length) {
-        return val.coding.map((c: any) => c.display || c.code).join(', ');
-      }
-      return val.text || '(empty)';
-
-    default:
-      if (typeof val === 'object' && Object.keys(val).length > 0) {
-        const keys = Object.keys(val).filter((k: string) => val[k]);
-        return keys.length > 0 ? `{${keys.join(', ')}}` : '(empty)';
-      }
-      return '(empty)';
-  }
-}
-
 // Update a specific array item value
 function updateArrayItem(index: number, newValue: any) {
   const newArr = [...arrayValue.value];
@@ -328,10 +343,63 @@ function addArrayItem() {
   });
 }
 
-// Remove an item from array
+// Remove an item from primitive array
 function removeArrayItem(index: number) {
   const newArr = [...arrayValue.value];
   newArr.splice(index, 1);
+  emit('update', {
+    path: fieldName.value,
+    value: newArr
+  });
+}
+
+// ============================================
+// ARRAY OF COMPLEX TYPE METHODS
+// (e.g., coding[] where each item is a Coding object)
+// ============================================
+
+// Empty templates for complex array items
+function createEmptyComplexItem(): Record<string, any> {
+  const templates: Record<string, Record<string, any>> = {
+    'Coding': { system: '', version: '', code: '', display: '', userSelected: false },
+    'CodeableConcept': { coding: [], text: '' },
+    'HumanName': { use: 'official', text: '', family: '', given: [], prefix: [], suffix: [] },
+    'Identifier': { use: 'usual', type: {}, system: '', value: '', period: {} },
+    'ContactPoint': { system: '', value: '', use: 'home', rank: 1, period: {} },
+    'Address': { use: 'home', text: '', line: [], city: '', district: '', state: '', postalCode: '', country: '' },
+    'Reference': { reference: '', type: '', identifier: {}, display: '' },
+    'Quantity': { value: 0, comparator: '', unit: '', system: '', code: '' },
+    'Period': { start: '', end: '' },
+    'Attachment': { contentType: '', language: '', data: '', url: '', size: 0, hash: '', title: '', creation: '' }
+  };
+  return templates[firstTypeCode.value] || {};
+}
+
+// Add a new empty complex item to the array
+function addComplexArrayItem() {
+  const newArr = [...arrayValue.value, createEmptyComplexItem()];
+  emit('update', {
+    path: fieldName.value,
+    value: newArr
+  });
+}
+
+// Remove a complex item from the array
+function removeComplexArrayItem(index: number) {
+  const newArr = [...arrayValue.value];
+  newArr.splice(index, 1);
+  emit('update', {
+    path: fieldName.value,
+    value: newArr
+  });
+}
+
+// Handle update from a ComplexTypeField for an individual array item.
+// ComplexTypeField emits { path: fieldName, value: updatedItem }
+// We splice the updated item back into the array.
+function handleComplexArrayItemUpdate(updateEvent: { path: string; value: any }, arrayIndex: number) {
+  const newArr = [...arrayValue.value];
+  newArr[arrayIndex] = updateEvent.value;
   emit('update', {
     path: fieldName.value,
     value: newArr
@@ -349,6 +417,18 @@ function removeArrayItem(index: number) {
   background: #fafafa;
   border-radius: 4px;
   padding: 6px 10px;
+}
+
+.field-label-row {
+  margin-bottom: 3px;
+}
+
+.field-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  text-transform: lowercase;
+  display: inline-block;
 }
 
 .field-input {
@@ -385,32 +465,6 @@ function removeArrayItem(index: number) {
   box-shadow: 0 0 0 2px rgba(66, 185, 131, 0.15);
 }
 
-.complex-field-preview {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.complex-label {
-  font-weight: 600;
-  color: #2c3e50;
-}
-
-.type-tag {
-  font-size: 10px;
-  padding: 1px 5px;
-  background: #e3f2fd;
-  color: #1565c0;
-  border-radius: 8px;
-}
-
-.complex-preview-text {
-  color: #888;
-  font-style: italic;
-  margin-left: auto;
-}
-
 .boolean-field {
   display: flex;
   align-items: center;
@@ -437,11 +491,25 @@ function removeArrayItem(index: number) {
   gap: 8px;
 }
 
+.array-complex-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.array-complex-item {
+  border: 1px dashed #bbb;
+  border-radius: 6px;
+  padding: 8px;
+  background: white;
+}
+
 .array-item-header {
   display: flex;
   align-items: center;
   gap: 6px;
   min-width: 120px;
+  margin-bottom: 6px;
 }
 
 .array-item-label {

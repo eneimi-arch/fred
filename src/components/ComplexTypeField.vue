@@ -1,10 +1,9 @@
 <template>
   <div class="complex-type-field" :class="`type-${elementTypeName}`">
-    <!-- Header -->
-    <div class="complex-type-header">
-      <span class="type-icon">&#128230;</span>
-      <span class="type-name">{{ elementTypeName }}</span>
-      <span v-if="isArrayType" class="array-badge" title="Multiple values allowed">*</span>
+    <!-- Depth 0 (top-level): FredAdvanced already shows field-name + type badge,
+         so only render the expand/collapse control here -->
+    <div v-if="currentDepth <= 0" class="complex-type-controls-inline">
+      <span v-if="isArrayType" class="array-count">{{ currentValue?.length || 0 }} item(s)</span>
       <button
         v-if="!isExpanded"
         @click="toggleExpand"
@@ -20,6 +19,32 @@
         title="Collapse"
       >
         &#9660; Collapse
+      </button>
+    </div>
+
+    <!-- Depth > 0 (nested sub-field): show the field name + type badge so the user
+         knows which field this is (e.g. "type  CodeableConcept") -->
+    <div v-else class="complex-type-label-row">
+      <span class="sub-field-name">{{ fieldName }}</span>
+      <span class="type-badge-small">{{ elementTypeName }}</span>
+      <span v-if="isArrayType && (currentValue?.length || 0)" class="array-count-badge">
+        {{ currentValue.length }}
+      </span>
+      <button
+        v-if="!isExpanded"
+        @click="toggleExpand"
+        class="btn-expand"
+        title="Expand to edit"
+      >
+        &#9654;
+      </button>
+      <button
+        v-else
+        @click="toggleExpand"
+        class="btn-collapse"
+        title="Collapse"
+      >
+        &#9660;
       </button>
     </div>
 
@@ -90,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, toRaw } from 'vue';
 import FieldRenderer from './FieldRenderer.vue';
 import { getComplexTypeDefinition } from '@/fhir/complexTypes';
 
@@ -119,6 +144,7 @@ const props = defineProps<{
   elementPath: string;
   depth?: number;
   defaultExpanded?: boolean;
+  profileSubFields?: any[];
 }>();
 
 const emit = defineEmits<{
@@ -130,6 +156,9 @@ const emit = defineEmits<{
 // ============================================
 
 const isExpanded = ref(!!props.defaultExpanded);
+
+// Current nesting depth (0 for top-level, 1+ for nested sub-fields)
+const currentDepth = computed(() => props.depth || 0);
 
 // Watch for external changes to defaultExpanded
 watch(() => props.defaultExpanded, (newVal) => {
@@ -179,14 +208,47 @@ const isArrayType = computed<boolean>(() => {
          (typeof props.element.max === 'string' && parseInt(props.element.max) > 1);
 });
 
-// Current value at this path
+// Current value at this path.
+// When rendering an individual array item, resourceData IS the value itself
+// (elementPath is empty or doesn't exist in resourceData).
 const currentValue = computed<any>(() => {
-  return getValueAtPath(props.resourceData || {}, props.elementPath);
+  if (!props.elementPath) return props.resourceData;
+  const found = getValueAtPath(props.resourceData || {}, props.elementPath);
+  // Fallback: if navigation found nothing, resourceData might be the value directly
+  if (found === undefined && props.resourceData && typeof props.resourceData === 'object' && !Array.isArray(props.resourceData)) {
+    return props.resourceData;
+  }
+  return found;
 });
+
+// Maximum recursion depth to prevent infinite nesting
+const MAX_DEPTH = 10;
 
 // Sub-fields definition based on complex type
 const subFields = computed<FhirElement[]>(() => {
-  return getComplexTypeDefinition(elementTypeName.value, props.elementPath) as FhirElement[];
+  // Recursion guard: prevent infinite nesting
+  const localDepth = props.depth || 0;
+  if (localDepth >= MAX_DEPTH) {
+    console.warn(`ComplexTypeField: max depth (${MAX_DEPTH}) reached at path "${props.elementPath}"`);
+    return [];
+  }
+
+  const parentPath = props.elementPath || '';
+  const fromDefinition = getComplexTypeDefinition(elementTypeName.value, parentPath) as FhirElement[];
+
+  // If complexTypes.js has a definition, use it
+  if (fromDefinition && fromDefinition.length > 0) {
+    return fromDefinition;
+  }
+
+  // Fallback: use profile-based sub-fields (for BackboneElement, etc.)
+  // Use toRaw() to avoid reactivity tracking on static configuration data
+  const rawSubFields = toRaw(props.profileSubFields);
+  if (rawSubFields && rawSubFields.length > 0) {
+    return rawSubFields as FhirElement[];
+  }
+
+  return [];
 });
 
 // ============================================
@@ -401,6 +463,49 @@ function createSubFieldForArray(subField: FhirElement, arrayIndex: number): Fhir
   padding: 12px;
   margin: 8px 0;
   background: #fafafa;
+}
+
+.complex-type-controls-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.array-count {
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.complex-type-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.sub-field-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 13px;
+}
+
+.type-badge-small {
+  font-size: 10px;
+  padding: 1px 6px;
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.array-count-badge {
+  font-size: 11px;
+  color: #e65100;
+  font-weight: 600;
 }
 
 .complex-type-header {

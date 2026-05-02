@@ -5,7 +5,7 @@
 import valueSetLoader from '@/services/valueSetLoader';
 import ComplexTypeField from './ComplexTypeField.vue';
 import { isComplexType, isPrimitiveType } from '@/fhir/complexTypes';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, markRaw, nextTick } from 'vue';
 
 // FHIR Versions and Profiles
 const fhirVersions: { value: string, label: string, profiles: Record<string, any> }[] = [
@@ -25,6 +25,13 @@ const currentResource = ref<any>({});
 const jsonOutput = ref('{}');
 const showOpenDialog = ref(false);
 const showExportDialog = ref(false);
+
+// Open Resource dialog state
+const openDialogTab = ref<'paste' | 'file' | 'url'>('paste');
+const pastedJson = ref('');
+const resourceUrl = ref('');
+const isUrlLoading = ref(false);
+const openDialogError = ref('');
 const showResourceSelector = ref(false);
 const showElementSelector = ref(false);
 const errorMessage = ref('');
@@ -40,6 +47,55 @@ const currentElementPath = ref('');
 // Complex type management
 const expandedComplexTypes = ref<Record<string, boolean>>({});
 
+// Dropdown search filters
+const resourceSearchQuery = ref('');
+const elementSearchQuery = ref('');
+const resourceSearchInput = ref<HTMLInputElement | null>(null);
+const elementSearchInput = ref<HTMLInputElement | null>(null);
+const highlightedResourceIndex = ref(-1);
+const highlightedElementIndex = ref(-1);
+
+// ============================================
+// DROPDOWN SEARCH / KEYBOARD NAVIGATION
+// ============================================
+
+// Reset highlight index whenever the search query changes
+watch(resourceSearchQuery, () => { highlightedResourceIndex.value = -1; });
+watch(elementSearchQuery, () => { highlightedElementIndex.value = -1; });
+
+function highlightNextResource() {
+  const max = filteredResourceTypes.value.length - 1;
+  highlightedResourceIndex.value = highlightedResourceIndex.value < max ? highlightedResourceIndex.value + 1 : 0;
+}
+
+function highlightPrevResource() {
+  const max = filteredResourceTypes.value.length - 1;
+  highlightedResourceIndex.value = highlightedResourceIndex.value > 0 ? highlightedResourceIndex.value - 1 : max;
+}
+
+function selectHighlightedResource() {
+  if (highlightedResourceIndex.value >= 0 && highlightedResourceIndex.value < filteredResourceTypes.value.length) {
+    changeResourceType(filteredResourceTypes.value[highlightedResourceIndex.value]);
+  }
+}
+
+function highlightNextElement() {
+  const max = filteredElements.value.length - 1;
+  highlightedElementIndex.value = highlightedElementIndex.value < max ? highlightedElementIndex.value + 1 : 0;
+}
+
+function highlightPrevElement() {
+  const max = filteredElements.value.length - 1;
+  highlightedElementIndex.value = highlightedElementIndex.value > 0 ? highlightedElementIndex.value - 1 : max;
+}
+
+function selectHighlightedElement() {
+  if (highlightedElementIndex.value >= 0 && highlightedElementIndex.value < filteredElements.value.length) {
+    const el = filteredElements.value[highlightedElementIndex.value];
+    addElement(el.path, el.type);
+  }
+}
+
 // ============================================
 // COMPUTED PROPERTIES
 // ============================================
@@ -51,6 +107,33 @@ const hasValueSetBinding = computed(() => {
     return !!element?.binding &&
            ['required', 'extensible', 'preferred'].includes(element.binding.strength);
   };
+});
+
+// Filtered resource types for the search dropdown (consecutive-character / substring match)
+const filteredResourceTypes = computed<string[]>(() => {
+  const query = resourceSearchQuery.value.trim().toLowerCase();
+  if (!query) return availableResourceTypes.value;
+  return availableResourceTypes.value.filter(r => r.toLowerCase().includes(query));
+});
+
+// Filtered elements for the search dropdown (consecutive-character / substring match)
+// Also excludes single-cardinality elements (max=1) that have already been added.
+const filteredElements = computed<typeof availableElements.value>(() => {
+  // Cardinality filter: remove 0..1 or 1..1 elements already selected
+  const cardinalityFiltered = availableElements.value.filter(e => {
+    const maxVal = e.max || '1';
+    const isSingle = maxVal === '1' || (parseInt(maxVal) === 1);
+    if (!isSingle) return true;
+    return !selectedElements.value.some(s => s.path === e.path);
+  });
+
+  const query = elementSearchQuery.value.trim().toLowerCase();
+  if (!query) return cardinalityFiltered;
+  return cardinalityFiltered.filter(e =>
+    e.name.toLowerCase().includes(query) ||
+    e.type.toLowerCase().includes(query) ||
+    e.path.toLowerCase().includes(query)
+  );
 });
 
 // Get binding info for an element path (for displaying binding strength in UI)
@@ -142,6 +225,51 @@ function handleComplexTypeUpdate(updateEvent: {path: string, value: any}) {
 }
 
 // ============================================
+// PROFILE-BASED SUB-FIELDS
+// ============================================
+
+/**
+ * Get sub-fields for an element from the FHIR profile snapshot.
+ * Used for BackboneElement and other types not defined in complexTypes.js.
+ * Returns sub-fields in the same format as getComplexTypeDefinition().
+ */
+function getProfileSubFields(elementPath: string): any[] {
+  const profile = resourceProfiles.value[currentFhirVersion.value]?.[currentResourceType.value];
+  if (!profile?.snapshot?.element) return [];
+
+  // Build the full FHIR path: e.g., "Patient.contact"
+  const fullPath = `${currentResourceType.value}.${elementPath}`;
+
+  // Skip metadata fields that clutter the editor for BackboneElement children
+  const skipFields = ['id', 'extension', 'modifierExtension'];
+
+  return profile.snapshot.element
+    .filter((e: any) => {
+      const pathParts = e.path.split('.');
+      const childName = pathParts[pathParts.length - 1];
+
+      // Must be exactly one level deeper than fullPath
+      // and not a metadata field
+      return e.path.startsWith(fullPath + '.') &&
+             pathParts.length === (fullPath.split('.').length + 1) &&
+             !skipFields.includes(childName);
+    })
+    .map((e: any) => {
+      const childName = e.path.split('.').pop();
+      return {
+        id: `${elementPath}.${childName}`,
+        path: `${elementPath}.${childName}`,
+        name: childName,
+        type: e.type || [{ code: 'BackboneElement' }],
+        min: e.min || 0,
+        max: e.max || '1',
+        binding: e.binding || null,
+        shortDescription: e.short || e.definition || ''
+      };
+    });
+}
+
+// ============================================
 // EXISTING METHODS
 // ============================================
 
@@ -162,73 +290,115 @@ function openVersionSelector() {
 }
 
 function openResourceSelector() {
+  resourceSearchQuery.value = '';
+  highlightedResourceIndex.value = -1;
   showResourceSelector.value = true;
   showVersionSelector.value = false;
   showElementSelector.value = false;
+  nextTick(() => {
+    resourceSearchInput.value?.focus();
+  });
 }
 
 function openElementSelector() {
   currentElementPath.value = '';
+  elementSearchQuery.value = '';
+  highlightedElementIndex.value = -1;
   loadAvailableElements('');
   showElementSelector.value = true;
   showVersionSelector.value = false;
   showResourceSelector.value = false;
+  nextTick(() => {
+    elementSearchInput.value?.focus();
+  });
 }
 
-// Load FHIR profiles (lazy loading)
-async function loadFhirProfiles() {
+// ============================================
+// PROFILE LOADING (Lazy — manifest first, profiles on demand)
+// ============================================
+
+const profileCache = ref<Record<string, any>>({});
+
+/**
+ * Load the small manifest (~5 KB) to populate the resource type dropdown instantly.
+ */
+async function loadResourceTypeList() {
   try {
-    const r4Resources: any = await import('../../fhir_profiles/R4/profiles-resources.json');
-    const r4Types: any = await import('../../fhir_profiles/R4/profiles-types.json');
+    const response = await fetch('/fhir_profiles/R4/manifest.json');
+    if (!response.ok) throw new Error(`Manifest fetch failed: ${response.status}`);
+    const manifest = await response.json();
 
-    const allStructureDefinitions: any[] = [];
-
-    if (r4Resources.default?.entry) {
-      allStructureDefinitions.push(...r4Resources.default.entry
-        .map((e: any) => e.resource)
-        .filter((r: any) => r.resourceType === 'StructureDefinition'));
+    if (manifest.R4) {
+      // Populate dropdown with resource types from manifest
+      const types = manifest.R4.resourceTypes || [];
+      availableResourceTypes.value = types.sort();
+      console.log(`Resource type list loaded: ${types.length} types (from manifest)`);
     }
-
-    if (r4Types.default?.entry) {
-      allStructureDefinitions.push(...r4Types.default.entry
-        .map((e: any) => e.resource)
-        .filter((r: any) => r.resourceType === 'StructureDefinition'));
-    }
-
-    const resourceMap: Record<string, any> = {};
-    allStructureDefinitions.forEach((sd) => {
-      const resourceType = sd.type || sd.url?.split('/').pop()?.split('|')[0];
-      if (resourceType) {
-        resourceMap[resourceType] = sd;
-      }
-    });
-
-    fhirVersions[0].profiles = resourceMap;
-    resourceProfiles.value.R4 = resourceMap;
-
-    const canonicalResourceTypes = [
-      'Patient', 'RelatedPerson', 'Practitioner', 'PractitionerRole', 'Organization',
-      'Observation', 'Condition', 'Encounter', 'MedicationRequest', 'Procedure',
-      'Location', 'Device', 'AllergyIntolerance', 'Immunization', 'CarePlan',
-      'DiagnosticReport', 'Specimen', 'ServiceRequest', 'Medication', 'Goal'
-    ];
-
-    availableResourceTypes.value = Object.keys(resourceMap)
-      .filter((type) => canonicalResourceTypes.includes(type))
-      .sort();
-
   } catch (error) {
-    console.error('Error loading FHIR profiles:', error);
-    errorMessage.value = 'Error loading FHIR profiles: ' + error;
+    console.error('Error loading resource type manifest:', error);
+    errorMessage.value = 'Error loading resource types. Run: node scripts/split-profiles.js';
   }
 }
 
+/**
+ * Load a single resource profile on demand when the user selects a resource type.
+ * Typical size: 20-200 KB (vs 138 MB for the full bundle).
+ * Results are cached — subsequent selections of the same type are instant.
+ */
+async function loadProfileForResource(resourceType: string) {
+  // Return from cache if already loaded
+  if (profileCache.value[resourceType]) {
+    return profileCache.value[resourceType];
+  }
+
+  try {
+    // Try fetching the individual resource profile
+    const response = await fetch(`/fhir_profiles/R4/resources/${resourceType}.json`);
+    if (response.ok) {
+      const profile = markRaw(await response.json());
+      profileCache.value[resourceType] = profile;
+
+      // Also cache in resourceProfiles for profile sub-field lookups
+      if (!resourceProfiles.value.R4) {
+        resourceProfiles.value.R4 = {};
+      }
+      resourceProfiles.value.R4[resourceType] = profile;
+
+      console.log(`Profile loaded: ${resourceType} (${(JSON.stringify(profile).length / 1024).toFixed(0)} KB)`);
+      return profile;
+    }
+  } catch (err) {
+    console.warn(`Failed to load profile for ${resourceType} from split files:`, err);
+  }
+
+  // Fallback: try types directory (for complex types like HumanName, Address)
+  try {
+    const response = await fetch(`/fhir_profiles/R4/types/${resourceType}.json`);
+    if (response.ok) {
+      const profile = markRaw(await response.json());
+      profileCache.value[resourceType] = profile;
+
+      if (!resourceProfiles.value.R4) {
+        resourceProfiles.value.R4 = {};
+      }
+      resourceProfiles.value.R4[resourceType] = profile;
+
+      console.log(`Type profile loaded: ${resourceType}`);
+      return profile;
+    }
+  } catch (err) {
+    console.warn(`Failed to load type profile for ${resourceType}:`, err);
+  }
+
+  console.warn(`No profile found for ${resourceType}`);
+  return null;
+}
+
 // Initialize resource when type is selected
-function initResource(resourceType: string) {
+async function initResource(resourceType: string) {
   currentResourceType.value = resourceType;
   currentResource.value = {
-    resourceType: resourceType,
-    id: 'new-' + resourceType.toLowerCase()
+    resourceType: resourceType
   };
 
   selectedElements.value = [];
@@ -237,7 +407,152 @@ function initResource(resourceType: string) {
   expandedComplexTypes.value = {};
 
   updateJson();
+
+  // Load the profile for this resource type on demand
+  await loadProfileForResource(resourceType);
+
+  // Now load available elements from the profile
   loadAvailableElements();
+}
+
+// ============================================
+// ELEMENT SYNC FROM RESOURCE DATA
+// ============================================
+
+/**
+ * Sync selectedElements with the current resource data.
+ * Used when loading a resource from JSON so the editor UI
+ * reflects all elements already present in the resource.
+ */
+function syncElementsFromResource() {
+  const resource = currentResource.value;
+  const resourceType = currentResourceType.value;
+
+  selectedElements.value = [];
+
+  if (!resource || !resourceType) return;
+
+  // Load the available elements from the profile first
+  loadAvailableElements();
+
+  const profile = resourceProfiles.value[currentFhirVersion.value]?.[resourceType];
+  if (!profile?.snapshot?.element) return;
+
+  // Build a lookup of profile elements by path suffix (the field name)
+  const basePath = resourceType;
+  const profileElementsByPath: Record<string, any> = {};
+  profile.snapshot.element
+    .filter((e: any) => {
+      const parts = e.path.split('.');
+      return parts.length === 2 && parts[0] === basePath;
+    })
+    .forEach((e: any) => {
+      const fieldName = e.path.split('.').pop();
+      profileElementsByPath[fieldName] = e;
+    });
+
+  // Iterate through each key in the resource (skip resourceType)
+  for (const key of Object.keys(resource)) {
+    if (key === 'resourceType') continue;
+
+    const value = resource[key];
+
+    // Look up the element definition from the profile
+    const profileElement = profileElementsByPath[key];
+    const elementType = profileElement?.type?.[0]?.code ||
+      inferTypeFromValue(value) || 'string';
+    const elementPath = key;
+    const elementName = key;
+
+    // Skip metadata fields the user didn't intentionally add
+    if (['id', 'meta', 'implicitRules', 'language', 'contained'].includes(key)) continue;
+
+    // Get binding info from profile
+    const binding = profileElement?.binding || null;
+
+    // Pre-compute profile sub-fields for BackboneElement types
+    const profileSubFields = getProfileSubFields(elementPath);
+    const rawProfileSubFields = profileSubFields.length > 0
+      ? markRaw(structuredClone(profileSubFields))
+      : undefined;
+
+    selectedElements.value.push({
+      name: elementName,
+      path: elementPath,
+      value: value,
+      type: elementType,
+      binding: binding,
+      min: profileElement?.min || 0,
+      max: profileElement?.max || '1',
+      profileSubFields: rawProfileSubFields
+    });
+  }
+
+  updateJson();
+}
+
+/**
+ * Infer FHIR type from a JavaScript value when no profile is available.
+ * Best-effort heuristic for JSON files that may not have matching profiles.
+ */
+function inferTypeFromValue(value: any): string {
+  if (value === null || value === undefined) return 'string';
+  if (typeof value === 'boolean') return 'boolean';
+  if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'decimal';
+  if (typeof value === 'string') {
+    // Heuristic: detect URIs and date/time strings
+    if (/^\d{4}-\d{2}-\d{2}(T|\s)/.test(value)) return 'dateTime';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return 'date';
+    if (/^https?:\/\//.test(value)) return 'uri';
+    return 'string';
+  }
+  if (Array.isArray(value)) {
+    if (value.length > 0 && typeof value[0] === 'object') {
+      return inferComplexTypeName(value[0]) || 'BackboneElement';
+    }
+    return 'string'; // array of primitives
+  }
+  if (typeof value === 'object') {
+    return inferComplexTypeName(value) || 'BackboneElement';
+  }
+  return 'string';
+}
+
+/**
+ * Heuristic: guess the FHIR complex type name from an object's keys.
+ * E.g., { use, family, given } → HumanName, { line, city, postalCode } → Address
+ */
+function inferComplexTypeName(obj: Record<string, any>): string {
+  if (!obj || typeof obj !== 'object') return '';
+
+  const keys = Object.keys(obj).sort();
+
+  const typeSignatures: Record<string, string[]> = {
+    'HumanName': ['family', 'given', 'prefix', 'suffix', 'text', 'use', 'period'],
+    'Address': ['city', 'country', 'district', 'line', 'period', 'postalCode', 'state', 'text', 'type', 'use'],
+    'Identifier': ['assigner', 'period', 'system', 'type', 'use', 'value'],
+    'CodeableConcept': ['coding', 'text'],
+    'Coding': ['code', 'display', 'system', 'userSelected', 'version'],
+    'ContactPoint': ['period', 'rank', 'system', 'use', 'value'],
+    'Period': ['end', 'start'],
+    'Quantity': ['code', 'comparator', 'system', 'unit', 'value'],
+    'Reference': ['display', 'identifier', 'reference', 'type'],
+    'Attachment': ['contentType', 'creation', 'data', 'hash', 'language', 'size', 'title', 'url'],
+    'Annotation': ['authorReference', 'authorString', 'text', 'time'],
+    'Timing': ['code', 'event', 'repeat'],
+    'Range': ['high', 'low'],
+    'Ratio': ['denominator', 'numerator'],
+  };
+
+  for (const [typeName, signature] of Object.entries(typeSignatures)) {
+    // Match if the object shares at least 60% of the type's known keys
+    const overlap = keys.filter(k => signature.includes(k)).length;
+    if (overlap >= 2 && overlap >= keys.length * 0.5) {
+      return typeName;
+    }
+  }
+
+  return '';
 }
 
 // Load available elements for current resource type
@@ -299,6 +614,11 @@ function addElement(elementPath: string, elementType: string) {
 
   if (isComplexType(elementType)) {
     defaultValue = createEmptyComplexObject(elementType);
+    // If element is an array type (max > 1 or *), wrap in array
+    const availElem = availableElements.value.find(e => e.path === elementPath);
+    if (availElem && (availElem.max === '*' || (parseInt(availElem.max) > 1))) {
+      defaultValue = [defaultValue];
+    }
   } else {
     switch (elementType) {
       case 'string':
@@ -334,6 +654,17 @@ function addElement(elementPath: string, elementType: string) {
   // Look up binding info from availableElements so it's available on selectedElements
   const availableElem = availableElements.value.find(e => e.path === elementPath);
 
+  // Pre-compute profile sub-fields for BackboneElement types (stable reference, avoids template re-evaluation)
+  const profileSubFields = getProfileSubFields(elementPath);
+
+  // Mark profileSubFields as raw to prevent Vue from creating deep reactive proxies.
+  // These are static configuration data from the FHIR profile that never change.
+  // Deep reactivity on this data causes infinite recursion in Vue's shallowReadonly
+  // during component setup when BackboneElements are nested.
+  const rawProfileSubFields = profileSubFields.length > 0
+    ? markRaw(structuredClone(profileSubFields))
+    : undefined;
+
   selectedElements.value.push({
     name: elementName,
     path: elementPath,
@@ -341,7 +672,8 @@ function addElement(elementPath: string, elementType: string) {
     type: elementType,
     binding: availableElem?.binding || null,
     min: availableElem?.min,
-    max: availableElem?.max
+    max: availableElem?.max,
+    profileSubFields: rawProfileSubFields
   });
 
   setNestedValue(currentResource.value, elementPath, defaultValue);
@@ -439,9 +771,37 @@ function drillDown(path: string) {
   loadAvailableElements(path);
 }
 
+// Remove empty/null/undefined values from an object recursively
+function stripEmpty(obj: any): any {
+  if (Array.isArray(obj)) {
+    // Keep arrays that have at least one non-empty item
+    const filtered = obj.map(stripEmpty).filter((item: any) => item !== undefined);
+    return filtered.length > 0 ? filtered : undefined;
+  }
+
+  if (obj === null || obj === undefined) return undefined;
+
+  if (typeof obj === 'object') {
+    const result: Record<string, any> = {};
+    for (const key of Object.keys(obj)) {
+      const val = stripEmpty(obj[key]);
+      if (val !== undefined) {
+        result[key] = val;
+      }
+    }
+    return Object.keys(result).length > 0 ? result : undefined;
+  }
+
+  // Primitives: keep falsy but meaningful values (0, false), drop only empty strings
+  if (obj === '') return undefined;
+
+  return obj;
+}
+
 function updateJson() {
   try {
-    jsonOutput.value = JSON.stringify(currentResource.value, null, 2);
+    const clean = stripEmpty(currentResource.value);
+    jsonOutput.value = JSON.stringify(clean, null, 2);
     validateResource();
   } catch (error) {
     console.error('Error updating JSON:', error);
@@ -454,6 +814,15 @@ function onJsonChange() {
     const parsed = JSON.parse(jsonOutput.value);
     if (parsed.resourceType) {
       currentResource.value = parsed;
+      currentResourceType.value = parsed.resourceType;
+
+      // If the profile is already loaded, sync elements immediately.
+      // Otherwise it will sync after profile loads on next resource type change.
+      const profile = resourceProfiles.value[currentFhirVersion.value]?.[parsed.resourceType];
+      if (profile?.snapshot?.element) {
+        syncElementsFromResource();
+      }
+
       validateResource();
     }
   } catch (error) {
@@ -467,9 +836,6 @@ function validateResource() {
 
   if (!currentResource.value.resourceType) {
     validationErrors.value.push('Resource type is required');
-  }
-  if (!currentResource.value.id) {
-    validationErrors.value.push('ID is required');
   }
 }
 
@@ -489,33 +855,114 @@ function changeResourceType(newType: string) {
 }
 
 function openResource() {
+  // Reset dialog state
+  openDialogTab.value = 'paste';
+  pastedJson.value = '';
+  resourceUrl.value = '';
+  openDialogError.value = '';
+  isUrlLoading.value = false;
   showOpenDialog.value = true;
+}
+
+/**
+ * Shared handler: process a parsed FHIR resource JSON object.
+ * Loads the profile, syncs elements into the editor UI, and closes the dialog.
+ */
+async function processLoadedResource(parsed: any) {
+  if (!parsed || !parsed.resourceType) {
+    openDialogError.value = 'JSON does not contain a valid FHIR resource (missing "resourceType" field)';
+    return;
+  }
+
+  const resourceType = parsed.resourceType;
+
+  // Reset editor state
+  currentResource.value = parsed;
+  currentResourceType.value = resourceType;
+  errorMessage.value = '';
+  openDialogError.value = '';
+  showOpenDialog.value = false;
+  expandedPaths.value = {};
+  expandedComplexTypes.value = {};
+  currentElementPath.value = '';
+
+  // Load profile first, then sync elements from the loaded data
+  await loadProfileForResource(resourceType);
+  syncElementsFromResource();
+
+  validateResource();
 }
 
 function handleFileUpload(event: Event) {
   const input = event.target as HTMLInputElement;
   if (input.files && input.files[0]) {
+    openDialogError.value = '';
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       try {
         const content = e.target?.result as string;
         const parsed = JSON.parse(content);
-        if (parsed.resourceType) {
-          currentResource.value = parsed;
-          currentResourceType.value = parsed.resourceType;
-          jsonOutput.value = content;
-          errorMessage.value = '';
-          showOpenDialog.value = false;
-          loadAvailableElements();
-          validateResource();
-        } else {
-          errorMessage.value = 'File does not contain a valid FHIR resource';
-        }
-      } catch (error) {
-        errorMessage.value = 'Error parsing FHIR resource: ' + error;
+        await processLoadedResource(parsed);
+      } catch (error: any) {
+        openDialogError.value = 'Error parsing FHIR resource: ' + error.message;
       }
     };
     reader.readAsText(input.files[0]);
+  }
+}
+
+function loadFromPaste() {
+  openDialogError.value = '';
+  const trimmed = pastedJson.value.trim();
+  if (!trimmed) {
+    openDialogError.value = 'Please paste a FHIR resource JSON';
+    return;
+  }
+  try {
+    const parsed = JSON.parse(trimmed);
+    processLoadedResource(parsed);
+  } catch (error: any) {
+    openDialogError.value = 'Invalid JSON: ' + error.message;
+  }
+}
+
+async function loadFromUrl() {
+  openDialogError.value = '';
+  const url = resourceUrl.value.trim();
+  if (!url) {
+    openDialogError.value = 'Please enter a URL';
+    return;
+  }
+  // Basic URL validation
+  try {
+    new URL(url);
+  } catch {
+    openDialogError.value = 'Please enter a valid URL (e.g., https://...)';
+    return;
+  }
+
+  isUrlLoading.value = true;
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('json') && !contentType.includes('application/fhir+json')) {
+      // Still try to parse — some servers don't set content-type correctly
+      console.warn('URL did not return JSON content-type, attempting parse anyway');
+    }
+    const text = await response.text();
+    const parsed = JSON.parse(text);
+    await processLoadedResource(parsed);
+  } catch (error: any) {
+    if (error instanceof SyntaxError) {
+      openDialogError.value = 'The URL did not return valid JSON';
+    } else {
+      openDialogError.value = 'Failed to fetch resource: ' + error.message;
+    }
+  } finally {
+    isUrlLoading.value = false;
   }
 }
 
@@ -547,7 +994,7 @@ function downloadJson() {
 // ============================================
 
 onMounted(() => {
-  loadFhirProfiles();
+  loadResourceTypeList();
   // ValueSet index is imported statically — already loaded, no async init needed
   console.log('ValueSet loader ready:', valueSetLoader.getStats());
 });
@@ -583,12 +1030,29 @@ onMounted(() => {
             {{ currentResourceType || 'Select Resource' }} &#9662;
           </button>
 
-          <div v-if="showResourceSelector" class="resource-selector-dropdown">
-            <div v-for="resourceType in availableResourceTypes" :key="resourceType"
-                 @click="changeResourceType(resourceType)"
-                 class="resource-option"
-                 :class="{ selected: resourceType === currentResourceType }">
-              {{ resourceType }}
+          <div v-if="showResourceSelector" class="resource-selector-dropdown" @click.stop>
+            <input
+              ref="resourceSearchInput"
+              v-model="resourceSearchQuery"
+              class="dropdown-search"
+              type="text"
+              placeholder="Search resources..."
+              @keydown.down.prevent="highlightNextResource"
+              @keydown.up.prevent="highlightPrevResource"
+              @keydown.enter.prevent="selectHighlightedResource"
+              @keydown.esc="showResourceSelector = false"
+            />
+            <div v-if="filteredResourceTypes.length === 0" class="dropdown-empty">
+              No resources match "{{ resourceSearchQuery }}"
+            </div>
+            <div v-else class="dropdown-scroll-area">
+              <div v-for="(resourceType, idx) in filteredResourceTypes" :key="resourceType"
+                   @click="changeResourceType(resourceType)"
+                   @mouseenter="highlightedResourceIndex = idx"
+                   class="resource-option"
+                   :class="{ selected: resourceType === currentResourceType, highlighted: idx === highlightedResourceIndex }">
+                <span>{{ resourceType }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -598,26 +1062,43 @@ onMounted(() => {
             Add Element &#9662;
           </button>
 
-          <div v-if="showElementSelector" class="element-selector-dropdown">
-            <div v-for="element in availableElements" :key="element.path"
-                 @click="addElement(element.path, element.type)"
-                 class="resource-option"
-                 :class="{ 'has-binding': hasValueSetBinding(element.path) }">
-              <span>{{ element.name }}</span>
-              <span class="type-badge">{{ element.type }}</span>
+          <div v-if="showElementSelector" class="element-selector-dropdown" @click.stop>
+            <input
+              ref="elementSearchInput"
+              v-model="elementSearchQuery"
+              class="dropdown-search"
+              type="text"
+              placeholder="Search elements..."
+              @keydown.down.prevent="highlightNextElement"
+              @keydown.up.prevent="highlightPrevElement"
+              @keydown.enter.prevent="selectHighlightedElement"
+              @keydown.esc="showElementSelector = false"
+            />
+            <div v-if="filteredElements.length === 0" class="dropdown-empty">
+              No elements match "{{ elementSearchQuery }}"
+            </div>
+            <div v-else class="dropdown-scroll-area">
+              <div v-for="(element, idx) in filteredElements" :key="element.path"
+                   @click="addElement(element.path, element.type)"
+                   @mouseenter="highlightedElementIndex = idx"
+                   class="resource-option"
+                   :class="{ 'has-binding': hasValueSetBinding(element.path), highlighted: idx === highlightedElementIndex }">
+                <span>{{ element.name }}</span>
+                <span class="type-badge">{{ element.type }}</span>
 
-              <span v-if="hasValueSetBinding(element.path)" class="binding-indicator" title="Has ValueSet options">
-                &#128203;
-              </span>
+                <span v-if="hasValueSetBinding(element.path)" class="binding-indicator" title="Has ValueSet options">
+                  &#128203;
+                </span>
 
-              <button v-if="hasNestedElements(element.path)" @click.stop="drillDown(element.path)" class="expand-btn">&#9654;</button>
+                <button v-if="hasNestedElements(element.path)" @click.stop="drillDown(element.path)" class="expand-btn">&#9654;</button>
+              </div>
             </div>
           </div>
         </div>
 
-        <div class="toolbar-group" v-if="currentResourceType">
+        <div class="toolbar-group">
           <button @click="openResource" class="btn-secondary">Open Resource</button>
-          <button @click="exportResource" class="btn-secondary">Export</button>
+          <button v-if="currentResourceType" @click="exportResource" class="btn-secondary">Export</button>
         </div>
       </div>
 
@@ -658,11 +1139,6 @@ onMounted(() => {
             <input v-model="currentResource.resourceType" @change="updateJson" disabled />
           </div>
 
-          <div class="form-group">
-            <label>ID:</label>
-            <input v-model="currentResource.id" @change="updateJson" />
-          </div>
-
           <!-- ELEMENTS LIST WITH CONDITIONAL RENDERING -->
           <div class="profile-fields" v-if="selectedElements.length > 0">
             <h3>Resource Elements ({{ selectedElements.length }})</h3>
@@ -698,7 +1174,8 @@ onMounted(() => {
                 :element="element"
                 :resource-data="currentResource"
                 :element-path="element.path"
-                :default-expanded="shouldAutoExpandComplexType(element.path)"
+                :default-expanded="true"
+                :profile-sub-fields="element.profileSubFields"
                 @update="handleComplexTypeUpdate"
               />
 
@@ -781,13 +1258,82 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Dialogs -->
+    <!-- Open Resource Dialog -->
     <div v-if="showOpenDialog" class="modal-overlay" @click.self="showOpenDialog = false">
-      <div class="modal-dialog">
+      <div class="modal-dialog open-resource-dialog">
         <h3>Open FHIR Resource</h3>
-        <p>Select a JSON file containing a FHIR resource:</p>
-        <input type="file" accept=".json" @change="handleFileUpload" />
-        <button @click="showOpenDialog = false" class="btn-small" style="margin-top: 15px;">Cancel</button>
+
+        <!-- Tabs -->
+        <div class="open-tabs">
+          <button
+            @click="openDialogTab = 'paste'; openDialogError = ''"
+            class="open-tab"
+            :class="{ active: openDialogTab === 'paste' }"
+          >
+            Paste JSON
+          </button>
+          <button
+            @click="openDialogTab = 'file'; openDialogError = ''"
+            class="open-tab"
+            :class="{ active: openDialogTab === 'file' }"
+          >
+            Upload File
+          </button>
+          <button
+            @click="openDialogTab = 'url'; openDialogError = ''"
+            class="open-tab"
+            :class="{ active: openDialogTab === 'url' }"
+          >
+            From URL
+          </button>
+        </div>
+
+        <!-- Tab: Paste JSON -->
+        <div v-if="openDialogTab === 'paste'" class="open-tab-content">
+          <p class="open-hint">Paste a FHIR resource JSON below:</p>
+          <textarea
+            v-model="pastedJson"
+            class="open-paste-area"
+            placeholder='{ "resourceType": "Patient", ... }'
+            spellcheck="false"
+          ></textarea>
+          <div class="open-actions">
+            <button @click="loadFromPaste" class="btn-primary">Load Resource</button>
+            <button @click="showOpenDialog = false" class="btn-small">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Tab: Upload File -->
+        <div v-if="openDialogTab === 'file'" class="open-tab-content">
+          <p class="open-hint">Select a JSON file containing a FHIR resource:</p>
+          <input type="file" accept=".json,application/json,application/fhir+json" @change="handleFileUpload" class="open-file-input" />
+          <div class="open-actions">
+            <button @click="showOpenDialog = false" class="btn-small">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Tab: From URL -->
+        <div v-if="openDialogTab === 'url'" class="open-tab-content">
+          <p class="open-hint">Enter the URL of a FHIR resource JSON:</p>
+          <input
+            v-model="resourceUrl"
+            type="url"
+            class="open-url-input"
+            placeholder="https://hapi.fhir.org/baseR4/Patient/123"
+            @keydown.enter.prevent="loadFromUrl"
+          />
+          <div class="open-actions">
+            <button @click="loadFromUrl" class="btn-primary" :disabled="isUrlLoading">
+              {{ isUrlLoading ? 'Loading...' : 'Fetch Resource' }}
+            </button>
+            <button @click="showOpenDialog = false" class="btn-small" :disabled="isUrlLoading">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Error within dialog -->
+        <div v-if="openDialogError" class="open-error">
+          {{ openDialogError }}
+        </div>
       </div>
     </div>
 
@@ -887,13 +1433,52 @@ onMounted(() => {
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  max-height: 300px;
-  overflow-y: auto;
-  width: 280px;
+  max-height: 400px;
+  width: 320px;
   top: 100%;
   left: 0;
   animation: fadeIn 0.2s ease-in-out;
   font-size: 13px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.dropdown-search {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  font-size: 13px;
+  color: #333;
+  background: #fafbfc;
+  box-sizing: border-box;
+  outline: none;
+  border-radius: 8px 8px 0 0;
+  flex-shrink: 0;
+}
+
+.dropdown-search::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.dropdown-search:focus {
+  background: #fff;
+  border-bottom-color: #1976d2;
+}
+
+.dropdown-scroll-area {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.dropdown-empty {
+  padding: 16px 12px;
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  font-size: 12px;
 }
 
 .version-option,
@@ -927,6 +1512,16 @@ onMounted(() => {
   background-color: #1976d2;
   color: #ffffff;
   font-weight: 600;
+}
+
+.resource-option.highlighted {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.resource-option.highlighted:hover {
+  background-color: #1976d2;
+  color: #ffffff;
 }
 
 .resource-option.has-binding {
@@ -1381,6 +1976,135 @@ onMounted(() => {
   max-width: 500px;
   width: 90%;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Open Resource Dialog — wider for paste area */
+.open-resource-dialog {
+  max-width: 600px;
+}
+
+.open-tabs {
+  display: flex;
+  border-bottom: 2px solid #e0e0e0;
+  margin-bottom: 16px;
+  gap: 0;
+}
+
+.open-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: #f5f5f5;
+  color: #666;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  border-radius: 6px 6px 0 0;
+}
+
+.open-tab:hover {
+  background: #eaeaea;
+  color: #333;
+}
+
+.open-tab.active {
+  background: #ffffff;
+  color: #1976d2;
+  border-bottom: 3px solid #1976d2;
+  font-weight: 600;
+}
+
+.open-tab-content {
+  min-height: 120px;
+}
+
+.open-hint {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.open-paste-area {
+  width: 100%;
+  min-height: 200px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  color: #333;
+  background: #fafbfc;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.open-paste-area:focus {
+  outline: none;
+  border-color: #1976d2;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+.open-paste-area::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.open-file-input {
+  width: 100%;
+  padding: 8px;
+  border: 1px dashed #bbb;
+  border-radius: 6px;
+  background: #fafbfc;
+  cursor: pointer;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.open-file-input:hover {
+  border-color: #1976d2;
+  background: #e3f2fd;
+}
+
+.open-url-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.open-url-input:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.15);
+}
+
+.open-url-input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.open-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
+.open-error {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 6px;
+  font-size: 13px;
+  border: 1px solid #ef9a9a;
 }
 
 .modal-dialog h3 {
